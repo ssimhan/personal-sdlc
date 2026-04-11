@@ -28,19 +28,25 @@ Use this workflow once a design has been approved to create a bite-sized, execut
    - WHERE does the data come from? (API? Local Storage? File?)
    - IF the source doesn't exist, create a task to build it.
    - *Tip*: "Mocking" in the UI component is technical debt. Mock at the source/API level instead.
-5. **Infrastructure Validation**: Before planning UI or API logic, verify that the underlying database schema and environment are ready.
-    - Run `npm test tests/infrastructure/schema.test.ts` to ensure the live DB matches expectations.
-    - Run `node scripts/status-quovadis.js` to check counts and existing columns.
-    - **Environment Check**: Run `grep [REQUIRED_KEY] .env.local` and verify the secret exists in Vercel/Production settings.
-    - IF columns are missing, keys are missing, or data types are wrong, create a **Schema/Env Migration** task as the first bite-sized task.
+5. **Infrastructure Safety Checks**:
+    - **Remote Schema Verification**: Verify that every database column referenced in new code (e.g., `api_token`) has actually been applied to the live Supabase project. Run `npm test tests/infrastructure/schema.test.ts` and `node scripts/status-quovadis.js` to ensure the live DB matches expectations.
+    - **Environment Parity**: Ensure your local `.env.local` has the exact same secrets (Client IDs, Secrets) as Vercel before testing begins.
+    - IF columns are missing, keys are missing, or data types are wrong, create a **Safety/Migration** task as the first bite-sized task.
 6. **Reliability Pre-flight**: Before finalizing the plan, map all external interactions.
     - [ ] **Timeout Mapping**: Identify every `fetch` or `supabase` call and assign a timeout (10s for standard UI actions, 30s for heavy AI/TTS operations).
     - [ ] **Error Toasts**: Ensure every `catch` block includes both a `toast.error` for the user and a `console.error` for technical debugging.
-7. **Conventions Check**: Before writing the plan, read 1-2 existing files in each category you'll be creating (test, component, API route) to learn how the codebase already does things. Document key conventions as constraints in the plan:
+    - [ ] **Local Service URL**: Never use `localhost` for local service connections (Ollama, Redis, Postgres direct). Always use `127.0.0.1` (IPv4 explicit). On macOS 13+, `localhost` may resolve to `::1` (IPv6) while the service binds only to `127.0.0.1`, causing silent connection failures.
+    - [ ] **Live-Service Test Gate**: Any test that calls a real external service (local or remote) must be gated behind `describe.skipIf(!process.env.MY_TEST_FLAG)` so CI passes without that service running.
+7. **Component Selection Check**: Before choosing a UI component, verify default behaviour that may need overriding.
+    - [ ] **shadcn Default Override**: If using `<DialogContent>`, `<SheetContent>`, or any shadcn wrapper that injects responsive classes (e.g., `sm:max-w-lg`), any custom size class must use a matching breakpoint prefix (`sm:max-w-4xl`, not just `max-w-4xl`). Plain utility classes lose to responsive defaults in Tailwind's cascade.
+    - [ ] **Radix Select Positioning**: `<Select.Content>` without `position="popper"` ignores trigger width. Always add `position="popper" sideOffset={4}` and `className="w-[var(--radix-select-trigger-width)]"` for dropdowns that should align to their trigger.
+8. **Conventions Check**: Before writing the plan, read 1-2 existing files in each category you'll be creating (test, component, API route) to learn how the codebase already does things. Document key conventions as constraints in the plan:
+     - [ ] **Auth Architecture Guard**: A mandatory check to ensure the **Sign In** page and the **API routes** are using the exact same provider (no splitting between NextAuth and Supabase). Review Phase History and existing wrappers.
      - [ ] **Test Style**: What assertion library? (e.g., `.toBeDefined()` vs `.toBeInTheDocument()`)? What mock patterns?
-     - [ ] **File Patterns**: How are imports structured? Named exports or defaults? Where do types live?
+     - [ ] **File Patterns**: How are imports structured? Named exports or defaults? Where do types live? (Check: Is it `proxy.ts` or `middleware.ts` for the current Next.js version?)
      - [ ] **Error Handling**: What's the existing `catch` pattern? Toast + console, or something else?
-8. **Plan**: ONLY then, proceed to write the Implementation Plan below, referencing the approved mockup as the "Spec".
+     - [ ] **Reuse Audit**: For every new function the plan calls for, search the codebase first. If an existing function covers ≥80% of the need, the plan task must say "call `X`, don't re-implement." State "No existing equivalent found" explicitly if the search came up empty. Agents will not look for helpers unless told to.
+9. **Plan**: ONLY then, proceed to write the Implementation Plan below, referencing the approved mockup as the "Spec".
 
 ## Plan Structure (MUST include these sections)
 
@@ -79,7 +85,7 @@ Use this workflow once a design has been approved to create a bite-sized, execut
    - If not: Include design system creation as a task in the plan
 
 ## Persistence
-- Save the plan to `docs/plans/YYYY-MM-DD-<feature-name>.md`.
+- Save the plan directly to the project repository path `docs/plans/YYYY-MM-DD-<feature-name>.md`. Do NOT use internal AI artifact systems for this document.
 - Ask the user: "Ready to start building? Use `/build`."
 
 ## Phase Completion Requirements

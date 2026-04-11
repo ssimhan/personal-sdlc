@@ -14,8 +14,18 @@ Use this workflow to eliminate all bugs and debt identified during **/audit**. N
 
 ## The Process
 
+### 0. Pre-Flight Lint Audit
+Before touching any file, capture the full error scope in one pass:
+```bash
+npm run lint 2>&1 | grep "error"
+```
+- **List all errors by file.** Fix ALL errors in a single file before moving to the next.
+- Do NOT fix one error, re-lint, discover a new one, repeat. **Batch your changes.**
+- After editing any file, grep for duplicate imports: `grep -n "^import" <file> | sort | uniq -d`
+- This prevents the "whack-a-mole" lint loop where each fix introduces a new error.
+
 ### 1. Inventory
-- Read `docs/BUGS.md` to inventory ALL active bugs and debt.
+- Read `BUGS.md` to inventory ALL active bugs and debt.
 - Count total items. This is your target: reduce to zero.
 - Create TodoWrite list with all items.
 
@@ -24,6 +34,11 @@ For each item, assess complexity:
 - **Simple** (< 30 min): Fix directly.
 - **Medium** (30 min - 2 hrs): Break into 2-3 sub-tasks.
 - **Complex** (> 2 hrs): Break into atomic units, each independently testable and commitable.
+
+**Dark Mode / Token Audit** is a batch refactor, not a feature bug. When you see a `BUG-*-UI-*` item about hardcoded colors:
+1. Read `src/app/globals.css` and build an explicit replacement map (hardcoded hex → semantic CSS token).
+2. Run `grep -rn "bg-\[#\|text-\[#\|border-\[#" src/` to find all instances.
+3. Apply all replacements in a single commit per file group — do not mix color replacements with feature changes.
 
 Document the breakdown in TodoWrite before starting fixes.
 

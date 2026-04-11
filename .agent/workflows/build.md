@@ -19,7 +19,12 @@ Use this workflow to execute a structured implementation plan step-by-step.
    - Read the implementation plan from `docs/plans/`.
    - Ensure you are in the correct context (checkout branch if needed).
 
-2. **Task Execution (Round-robin per task)**
+2. **Debugging Protocol**
+   - If a task fails more than once (same error or cycling through approaches), **stop and create a debug log** at `docs/debug-log-<topic>.md` with three columns: `Attempt | What was tried | Why it failed`.
+   - Read this log before every subsequent attempt. This prevents Claude from re-trying approaches that already failed as context grows, and surfaces the actual constraint faster.
+   - Delete the log once the task is resolved.
+
+3. **Task Execution (Round-robin per task)**
    - For each task in the plan:
      - **RED**: Write the failing test as specified in the plan. Watch it fail.
      - **GREEN**: Write minimal code to make the test pass.
@@ -31,14 +36,14 @@ Use this workflow to execute a structured implementation plan step-by-step.
      - Apply craft principles from `ui-development` skill
      - Offer to save new patterns after completion
 
-3. **Subagent Handoff (Optional)**
+4. **Subagent Handoff (Optional)**
    - If a task is complex, you may spawn a subagent to handle the RED-GREEN-REFACTOR cycle, but you MUST review its work against the plan's success criteria.
 
-4. **Technical Debt Discovery**
+5. **Technical Debt Discovery**
    - As you implement, actively look for existing technical debt, complex code that needs refactoring, or missing edge case handling.
    - If found, and it's out of scope for the current task, IMMEDIATELY add it to `BUGS.md` or the appropriate technical debt tracker.
 
-5. **Progress Tracking**
+6. **Progress Tracking**
    - Check off tasks in the plan file as they are completed.
    - Update `PROJECT_HISTORY.md` at the end of the session.
 

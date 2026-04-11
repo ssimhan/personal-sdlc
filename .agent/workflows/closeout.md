@@ -1,15 +1,18 @@
 ---
 description: Update documentation, commit and push to the latest branch
+model: haiku
 ---
 
 # /closeout
 
 Use this workflow to wrap up a development session and maintain a clean project history.
 
+> **Model note**: Use the Haiku model for all doc-writing and file-editing steps in this workflow — it is fast and sufficient for structured documentation tasks. Only escalate to Sonnet/Opus if you encounter ambiguous content decisions that require judgment.
+
 ## Prerequisites
-- `/code-review` has been completed
+- `/audit` has been completed and passed
 - `/fix` has been completed with zero remaining bugs/debt
-- BUGS.md shows all items resolved for current phase
+- `docs/BUGS.md` shows all items resolved for current phase
 
 ## Core Principles
 - **Document as You Go**: History is most accurate when fresh.
@@ -19,39 +22,42 @@ Use this workflow to wrap up a development session and maintain a clean project 
 
 ## The Process
 
-## The Process
-
 ### 1. Integration of Learnings
 - **Pull Lessons**: Retrieve the "Lessons Learned" established in the recent `/teach-me` session.
-- **Update Lessons Artifact**: Ensure `lessons_learned.md` is current.
+- **Update Lessons Artifact**: Ensure `docs/lessons_learned.md` is current — prepend a new dated entry at the top.
+- **Update Gotchas**: If any new failure pattern was identified this session (a new "Tell", a silent bug, a wrong assumption), append it to `.agent/gotchas.md` in the appropriate section. Include: the pattern name, a code example showing wrong vs. right, and the "Tell" that signals the problem. Update the "Last updated" line at the bottom of the file.
 
 ### 2. Documentation Update
-- **Project Structure**: Update `PROJECT_HISTORY.md` with:
-    - Date and Phase
-    - Key Accomplishments (Bullet points)
+- **Project History**: Update `PROJECT_HISTORY.md` — prepend a new dated entry at the top with:
+    - Date and Phase name
+    - Key Accomplishments (bullet points)
     - Key Learnings (from Step 1)
-- **Roadmap**: Update `PROJECT_ROADMAP.md` to mark completed items.
-- **Bugs**: Ensure `docs/BUGS.md` reflects any new items or resolutions.
+- **Roadmap**: Update `PROJECT_ROADMAP.md` — mark the just-completed phase with ✅ and check off all completed items.
+- **Bugs**: Ensure `docs/BUGS.md` — active table is clean (resolved items moved to Resolved section).
+- **README**: Update `README.md` to reflect the current state of the project:
+    - Move the just-completed phase from the "Future Roadmap" section to the "Core Features" section (or update existing feature bullets to include Phase additions).
+    - Update the "Future Roadmap" section so the *next* phase is listed first.
+    - Keep the README as a live "what does this app do today" document — not a historical log (that's `PROJECT_HISTORY.md`'s job).
 
 ### 3. Workflow Synchronization
 - Run the `/sync-workflows` workflow to ensure local workflow improvements are upstreamed to the quickstart repo (if applicable) or synced down.
-    - *Note*: If we modified a workflow locally (like we just did for `teach-me`), we want to save that.
+    - *Note*: If any workflow file (`~/.claude/commands/*.md`) was modified this session, push those changes.
 
 ### 4. Git Hygiene
-- **Commit**: Ensure all changes (including doc updates) are committed.
-- **Push**: Push the current feature/phase branch to valid remote.
+- **Commit**: Stage and commit all documentation updates with a clear `docs(phase-N): closeout` message.
+- **Push**: Push the current feature/phase branch to remote.
 
 ### 4.5 CI Smoke Test
 - **Simulate CI locally** before pushing: `npm run lint && npm test && npm run build`
-- **Verify CI config**: Ensure `.github/workflows/ci.yml` references only existing `npm` scripts (run `grep 'npm run' .github/workflows/ci.yml` and cross-check against `package.json`)
+- **Verify CI config**: Ensure `.github/workflows/ci.yml` references only existing `npm` scripts (`grep 'npm run' .github/workflows/ci.yml` cross-checked against `package.json`)
 - **Secret Hygiene**: If the phase added new env vars, confirm they exist in GitHub → Settings → Secrets → Actions
-- **Node Version**: Confirm the CI matrix targets only **active LTS** Node versions (check [nodejs.org/releases](https://nodejs.org/en/about/releases))
-- **Integration Tests**: Any test that calls an external service must have a graceful skip guard (`if (!url || !key) return`)
+- **Node Version**: Confirm the CI matrix targets only **active LTS** Node versions
+- **Integration Tests**: Any test that calls an external service must have a graceful skip guard
 
 ### 5. Phase Transition (If Applicable)
 - **Check Roadmap**: Did we just complete a Phase?
-- **Branch**: If yes, ask the user if they want to move to debug mode. If they don't then create the branch for the *next* phase (e.g., `git checkout -b feat/phase-4`).
-- **Notify**: Inform user of the new active branch.
+- **Branch**: If yes, ask the user if they want to start the next phase or stay in the current branch. If starting next phase, create: `git checkout -b phase-N` where N is the next phase number from the roadmap.
+- **Notify**: Inform user of the new active branch and what Phase N contains.
 
 ### 6. Summary
-- Provide a final brief summary of the session to the user.
+- Provide a concise final summary (5–8 bullets max) covering: what shipped, what was deferred, test count delta, and next phase name.
