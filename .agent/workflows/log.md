@@ -2,34 +2,15 @@
 description: Log bugs, technical debt, or feature ideas into the tracking system.
 ---
 
-# /log
+# /log — Capture without implementing
 
-Use this workflow to capture future work—whether it's a bug, technical debt, or a new feature idea—without starting implementation.
+Categorize: **Bug/Debt** → `docs/BUGS.md` active table. **Feature/Idea** → `PROJECT_ROADMAP.md`.
 
-## 1. Categorization
-Determine the destination of the entry based on the user's intent:
-*   **Bugs/Debt**: Functional issues or "code smell" (DRY violations, missing timeouts).
-    *   *Destination*: `docs/BUGS.md`
-*   **Features/Ideas**: New capabilities or enhancements.
-    *   *Destination*: `PROJECT_ROADMAP.md`
+**Bug/Debt format**: `| [ID] | Description | Severity (Critical/High/Medium/Low) | Active | Note |`
+- For debt items that move code, use: `"Move X from file A (line N) to file B. Update imports in: file C, file D."` — this lets an agent fix it without any investigation step.
 
-## 2. The Capture Process
+**Feature format**: Add to the current phase section if it's a small UX tweak; add to a future phase if it's a new capability.
 
-### If BUG or DEBT:
-1.  Add a row to the **Active** table in `docs/BUGS.md`.
-2.  Use the format: `| [ID] | Description | Severity | Status | Note |`
-3.  **Severity**: Critical (Breaks app), High (Degrades UX), Medium (Utility), Low (Polish/Debt).
+**Hard stops**: No root cause investigation. No fix proposal. No new branch. No reading beyond what's needed to categorize.
 
-### If FEATURE or IDEA:
-1.  Locate `PROJECT_ROADMAP.md`.
-2.  Determine if it belongs in the **Current Phase** (small UX tweak) or **Future Phases** (new capabilities).
-3.  Add a row with Feature Name, Description, and Status/Priority.
-
-## 3. The "No-Work" Clause
-*   **Do NOT** investigate the root cause.
-*   **Do NOT** propose a fix or design.
-*   **Do NOT** start a new branch.
-*   **Do NOT** read more than the minimum files needed for categorization.
-
-## 4. Confirmation
-"Added [ID] to [File]. I am NOT starting work on this now."
+Confirm with: `"Added [ID] to [File]. Not starting work on this."`

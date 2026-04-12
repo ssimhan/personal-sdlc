@@ -22,34 +22,26 @@ npm run lint 2>&1 | grep "error"
 - **List all errors by file.** Fix ALL errors in a single file before moving to the next.
 - Do NOT fix one error, re-lint, discover a new one, repeat. **Batch your changes.**
 - After editing any file, grep for duplicate imports: `grep -n "^import" <file> | sort | uniq -d`
-- This prevents the "whack-a-mole" lint loop where each fix introduces a new error.
 
 ### 1. Inventory
 - Read `BUGS.md` to inventory ALL active bugs and debt.
 - Count total items. This is your target: reduce to zero.
-- Create TodoWrite list with all items.
+- Create a task list with all items.
 
 ### 2. Decomposition
 For each item, assess complexity:
-- **Simple** (< 30 min): Fix directly.
-- **Medium** (30 min - 2 hrs): Break into 2-3 sub-tasks.
-- **Complex** (> 2 hrs): Break into atomic units, each independently testable and commitable.
+- **Simple**: Fix directly.
+- **Medium**: Break into 2-3 sub-tasks.
+- **Complex**: Break into atomic units, each independently testable and commitable.
 
-**Dark Mode / Token Audit** is a batch refactor, not a feature bug. When you see a `BUG-*-UI-*` item about hardcoded colors:
-1. Read `src/app/globals.css` and build an explicit replacement map (hardcoded hex → semantic CSS token).
-2. Run `grep -rn "bg-\[#\|text-\[#\|border-\[#" src/` to find all instances.
-3. Apply all replacements in a single commit per file group — do not mix color replacements with feature changes.
-
-Document the breakdown in TodoWrite before starting fixes.
+Document the breakdown before starting fixes.
 
 ### 3. Fix Loop (for each item/sub-task)
 - **Reproduce**: Confirm the bug exists (write a failing test).
 - **Isolate**: Identify root cause, not just symptoms.
 - **Fix**: Apply minimal, targeted change.
   - *Tip*: When ensuring functionality on legacy CommonJS (`require`) files, prefer `vi.spyOn` over `vi.mock` to avoid module interop issues.
-- **Verify**:
-  - Failing test now passes
-  - Full test suite passes (no regressions)
+- **Verify**: Failing test now passes + full suite passes (no regressions).
 - **Update BUGS.md**: Mark as Fixed with brief note.
 - **Commit**: Atomic commit per fix (e.g., `fix(area): resolve BUG-XXX - description`).
 
@@ -62,7 +54,7 @@ Same loop as bugs, but with refactoring mindset:
 ### 5. Discovery During Fixes
 When fixing reveals NEW issues:
 - Add to BUGS.md immediately.
-- Add to TodoWrite list.
+- Add to task list.
 - Fix before proceeding to closeout.
 
 ### 6. Completion Gate
@@ -72,19 +64,5 @@ Before proceeding to `/closeout`, ALL must be true:
 - [ ] All tests passing
 - [ ] No new TODOs/FIXMEs introduced
 - [ ] BUGS.md shows all items resolved
-
-## Handling Large Fix Sessions
-If total fix work exceeds 4 hours:
-- Group related fixes into logical batches.
-- Complete and commit each batch.
-- Take breaks between batches to maintain quality.
-- Never rush—rushed fixes create new bugs.
-
-## Anti-Patterns
-- Deferring items to "next phase"
-- Combining multiple fixes in one commit
-- Skipping tests because "it's a simple fix"
-- Expanding scope during fix ("while I'm here..." -> add to BUGS.md instead)
-- Marking items as "won't fix" without user approval
 
 **Next Step**: Once all items are resolved, use `/closeout` to document and commit.

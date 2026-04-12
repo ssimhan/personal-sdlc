@@ -14,12 +14,6 @@ Use this workflow to wrap up a development session and maintain a clean project 
 - `/fix` has been completed with zero remaining bugs/debt
 - `docs/BUGS.md` shows all items resolved for current phase
 
-## Core Principles
-- **Document as You Go**: History is most accurate when fresh.
-- **Kaizen (Continuous Improvement)**: Each session should leave the codebase better than it found it.
-- **Clean State**: No dangling worktrees or uncommitted changes.
-- **Atomic History**: Ensure the branch is ready for merge or PR.
-
 ## The Process
 
 ### 1. Integration of Learnings
@@ -43,16 +37,11 @@ Use this workflow to wrap up a development session and maintain a clean project 
 - Run the `/sync-workflows` workflow to ensure local workflow improvements are upstreamed to the quickstart repo (if applicable) or synced down.
     - *Note*: If any workflow file (`~/.claude/commands/*.md`) was modified this session, push those changes.
 
-### 4. Git Hygiene
+### 4. Git Hygiene + CI Check
+- **CI Smoke Test**: `npm run lint && npm test && npm run build` — must be clean before committing docs.
 - **Commit**: Stage and commit all documentation updates with a clear `docs(phase-N): closeout` message.
 - **Push**: Push the current feature/phase branch to remote.
-
-### 4.5 CI Smoke Test
-- **Simulate CI locally** before pushing: `npm run lint && npm test && npm run build`
-- **Verify CI config**: Ensure `.github/workflows/ci.yml` references only existing `npm` scripts (`grep 'npm run' .github/workflows/ci.yml` cross-checked against `package.json`)
-- **Secret Hygiene**: If the phase added new env vars, confirm they exist in GitHub → Settings → Secrets → Actions
-- **Node Version**: Confirm the CI matrix targets only **active LTS** Node versions
-- **Integration Tests**: Any test that calls an external service must have a graceful skip guard
+- **Secret Hygiene**: If the phase added new env vars, confirm they exist in GitHub → Settings → Secrets → Actions.
 
 ### 5. Phase Transition (If Applicable)
 - **Check Roadmap**: Did we just complete a Phase?

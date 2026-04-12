@@ -12,11 +12,25 @@ Inspect the implementation for reliability and performance.
 *   **Test Verification**: Run the test suite. If tests are missing or failing, the audit is **FAILED**.
 *   **Test Data Parity**: If any core validation rules (e.g., UUID formats, token shapes, or required fields) were changed during development, visually verify that Vitest `.mockResolvedValue` stubs and test objects reflect the new strict shapes BEFORE running `npm test`, preventing cascading false-positive failures.
 *   **Schema Integrity**: Run `npm test tests/infrastructure/schema.test.ts`. If columns are missing or data types have drifted without a migration, the audit is **FAILED**.
-*   **Clean Code**: Run `/reducing-entropy` on all files modified in this phase. Do not proceed to the UX audit until the adversarial review returns no Blocking findings. Log any Improvement-level findings to `BUGS.md`.
 *   **Filter String Wildcards**: If any new code uses Supabase `.or()` with inline filter strings, verify `ilike` patterns use `*` (not `%`). Example: `url.ilike.*linkedin.com*`. The `%` form silently returns no rows when used inside a filter string.
 *   **Hooks-in-Lists**: Grep new list-rendering components for hook calls (`use`) inside `.map()` callbacks. Any hook called inside a loop is a Rules of Hooks violation — extract to a sub-component.
 *   **Dead Component Check**: For every new component added this phase, verify it is imported and rendered somewhere. Search for its name — if the only match is its own file, it is not wired in. Treat this as a Critical bug.
 *   **Path Sanitation**: Verify no URL-encoded directories (e.g., `%5Bid%5D`) exist in the `src/app` tree. These cause silent routing conflicts.
+
+### Clean Code (Entropy Review)
+Spawn a fresh subagent with **only** the changed files as context — no plan doc, no conversation history, no justification. Use `git diff --name-only HEAD~N` to identify files modified this phase. Give the subagent this prompt:
+
+> "Review these files as a senior engineer seeing them for the first time. Identify: (1) code that solves a problem that doesn't exist yet (YAGNI), (2) duplicated logic that should be a shared utility (DRY), (3) abstractions introduced for a single use case (premature abstraction), (4) functions or components doing more than one job (single responsibility), (5) anything that will be confusing to the next person reading this. Be specific — name the file and line. Do not praise what's working."
+
+Triage findings into three buckets:
+
+| Bucket | Definition | Action |
+|---|---|---|
+| **Blocking** | Violates DRY, YAGNI, or SRP in a way that will cause real future pain | Fix before proceeding |
+| **Improvement** | Valid point, non-urgent | Log to `BUGS.md` as Low DEBT |
+| **Nitpick** | Style, naming preference, minor | Acknowledge, skip |
+
+Fix all Blocking issues and re-run tests. If blocking issues were fixed, re-run the subagent on the updated files until its highest-severity finding is Improvement or lower. Note: the subagent will sometimes critique intentional simplicity as "missing abstraction" — the right amount of complexity is the minimum needed for the current task.
 
 ## 2. UX & Aesthetic Audit (The "Chassis" Check)
 Verify the interface and user interaction.
@@ -28,7 +42,11 @@ Verify the interface and user interaction.
 
 ## 3. Results & Remediation
 *   **Small Fixes**: Correct minor typos, spacing, or color variables immediately.
-*   **Blocking Issues**: Add any bugs or UX debt to `BUGS.md` with `/log`.
+*   **Blocking Issues**: Add any bugs or UX debt to `BUGS.md` with `/log`. For debt items that involve moving code, use this template for maximum agent-fixability:
+    ```
+    Move X from file A (line N) to file B. Update imports in: file C, file D.
+    ```
+    Include: what moves, exact source location, destination, and every affected import site. An agent given this template can execute the fix without any investigation step.
 *   **Audit Status**:
     *   ✅ **PASS**: Specs met, P0s satisfied, Aesthetics verified.
     *   ❌ **FAIL**: Known bugs, P0 violations, or UX drift.
