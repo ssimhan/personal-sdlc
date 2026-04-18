@@ -7,11 +7,15 @@ description: Create a detailed, TDD-first implementation plan from an approved d
 Use this workflow once a design has been approved to create a bite-sized, executable path forward.
 
 ## Core Principles
-- **TDD-First**: Every task must start with a failing test.
+- **TDD-First**: Every chunk must start with a failing test.
 - **Architectural Rigor**: Apply Clean Architecture, SOLID, and Domain-Driven Design (DDD) to ensure maintainability and high quality.
-- **Bite-sized Granularity**: Each task should take 2-5 minutes to implement.
+- **Bite-sized Granularity**: Each chunk should take 2-5 minutes to implement.
 - **Zero Ambiguity**: Use exact file paths and specify line ranges when modifying.
-- **Goals & Success Criteria**: Every phase must have measurable outcomes.
+- **Goals & Success Criteria**: Every block must have measurable outcomes.
+
+## Terminology
+- **Block**: A logical grouping of related work within this plan (e.g., "Data Schema", "Core Logic", "UI"). Do NOT use the word "phase" inside the plan — the outer project phase is the only level that uses that term.
+- **Chunk**: A single bite-sized unit of work inside a block. Each chunk = one RED-GREEN-REFACTOR-COMMIT cycle.
 
 ## Process (Before Generating Plan)
 
@@ -30,12 +34,17 @@ Use this workflow once a design has been approved to create a bite-sized, execut
     - **Remote Schema Verification**: Verify that every database column referenced in new code has actually been applied to the live Supabase project. Run `npm test tests/infrastructure/schema.test.ts` and `node scripts/status-quovadis.js` to ensure the live DB matches expectations.
     - **Environment Parity**: Ensure your local `.env.local` has the exact same secrets as Vercel before testing begins.
     - IF columns are missing, keys are missing, or data types are wrong, create a **Safety/Migration** task as the first bite-sized task.
+    - **Environment & Secrets Setup**:
+      - [ ] List every required env var and confirm which file loads it (`.env`, `.env.local`, etc.)
+      - [ ] If using dotenv, specify load order explicitly: `.env.local` first (local overrides), then `.env` (shared defaults)
+      - [ ] Confirm all secret-holding files are in `.gitignore` before the first test run
+      - [ ] If the feature calls an external API: define idempotency strategy upfront — cache file, fixture, or mock flag. Never rely on re-running the live API call for dev/test iteration.
 6. **Reliability Pre-flight**: Before finalizing the plan, map all external interactions.
     - [ ] **Timeout Mapping**: Identify every `fetch` or `supabase` call and assign a timeout (10s for standard UI actions, 30s for heavy AI/TTS operations).
     - [ ] **Error Toasts**: Ensure every `catch` block includes both a `toast.error` for the user and a `console.error` for technical debugging.
     - [ ] **Live-Service Test Gate**: Any test that calls a real external service must be gated behind `describe.skipIf(!process.env.MY_TEST_FLAG)` so CI passes without that service running.
-7. **Conventions Check**: Before writing the plan, read 1-2 existing files in each category you'll be creating (test, component, API route). Scan `.agent/gotchas.md` for patterns relevant to this phase's stack. Document key conventions as constraints in the plan:
-     - [ ] **Auth Architecture Guard**: Ensure the Sign In page and API routes use the exact same auth provider. Review Phase History and existing wrappers.
+7. **Conventions Check**: Before writing the plan, read 1-2 existing files in each category you'll be creating (test, component, API route). Scan `.agent/gotchas.md` for patterns relevant to this work. Document key conventions as constraints in the plan:
+     - [ ] **Auth Architecture Guard**: Ensure the Sign In page and API routes use the exact same auth provider. Review project history and existing wrappers.
      - [ ] **Test Style**: What assertion library? What mock patterns?
      - [ ] **File Patterns**: How are imports structured? Named exports or defaults? Where do types live?
      - [ ] **Error Handling**: What's the existing `catch` pattern? Toast + console, or something else?
@@ -50,12 +59,13 @@ Use this workflow once a design has been approved to create a bite-sized, execut
    - **Design Patterns**: Specify if using Factory, Observer, Repository, etc.
    - **Tech Stack**: Libraries or frameworks involved.
 
-2. **Implementation Phases**
-   - Break work down into logical phases (e.g., Phase 1: Data Schema, Phase 2: Core Logic).
-   - For each phase, list **Success Criteria** using checkboxes.
+2. **Blocks**
+   - Break work down into logical blocks (e.g., Block 1: Data Schema, Block 2: Core Logic, Block 3: UI).
+   - Never call a block a "phase" — that word is reserved for the outer project level.
+   - For each block, list **Success Criteria** using checkboxes.
 
-3. **Bite-Sized Tasks**
-   For each task, provide:
+3. **Chunks** (inside each Block)
+   For each chunk, provide:
    - **Files**: Create: `path/to/new.ts`, Modify: `path/to/old.ts:L10-20`.
    - **Step 1: Write failing test**: Provide the minimal test code.
    - **Step 2: Verify failure**: Specify the command and expected error.
@@ -76,18 +86,18 @@ Use this workflow once a design has been approved to create a bite-sized, execut
 6. **For UI Features**
    - Check for `.interface-design/system.md`
    - If exists: Load and apply established patterns in implementation plan
-   - If not: Include design system creation as a task in the plan
+   - If not: Include design system creation as a chunk in the plan
 
 ## Persistence
 - Save the plan directly to the project repository path `docs/plans/YYYY-MM-DD-<feature-name>.md`. Do NOT use internal AI artifact systems for this document.
 - Ask the user: "Ready to start building? Use `/build`."
 
-## Phase Completion Requirements
+## Completion Requirements
 
-A phase is NOT complete until the following workflow sequence is executed:
+The outer project phase is NOT complete until the following workflow sequence is executed:
 
 1. **`/build`** - Execute the implementation plan
 2. **`/audit`** - Perform combined technical and UX verification
 3. **`/closeout`** - Document and commit
 
-Skipping `/audit` is not permitted. The phase remains open until BUGS.md shows zero active items for that phase.
+Skipping `/audit` is not permitted. The project phase remains open until BUGS.md shows zero active items for it.

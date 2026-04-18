@@ -51,4 +51,4 @@ Verify the interface and user interaction.
     *   ✅ **PASS**: Specs met, P0s satisfied, Aesthetics verified.
     *   ❌ **FAIL**: Known bugs, P0 violations, or UX drift.
 
-**Next Step**: Once audit is passing, run `/teach-me` followed by `/closeout`.
+**Next Step**: Once audit is passing, run `/kaizen` followed by `/closeout`.

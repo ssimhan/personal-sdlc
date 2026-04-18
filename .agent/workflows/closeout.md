@@ -17,7 +17,7 @@ Use this workflow to wrap up a development session and maintain a clean project 
 ## The Process
 
 ### 1. Integration of Learnings
-- **Pull Lessons**: Retrieve the "Lessons Learned" established in the recent `/teach-me` session.
+- **Pull Lessons**: Retrieve the "Lessons Learned" established in the recent `/kaizen` session.
 - **Update Lessons Artifact**: Ensure `docs/lessons_learned.md` is current — prepend a new dated entry at the top.
 - **Update Gotchas**: If any new failure pattern was identified this session (a new "Tell", a silent bug, a wrong assumption), append it to `.agent/gotchas.md` in the appropriate section. Include: the pattern name, a code example showing wrong vs. right, and the "Tell" that signals the problem. Update the "Last updated" line at the bottom of the file.
 
