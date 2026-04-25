@@ -16,6 +16,8 @@ Inspect the implementation for reliability and performance.
 *   **Hooks-in-Lists**: Grep new list-rendering components for hook calls (`use`) inside `.map()` callbacks. Any hook called inside a loop is a Rules of Hooks violation — extract to a sub-component.
 *   **Dead Component Check**: For every new component added this phase, verify it is imported and rendered somewhere. Search for its name — if the only match is its own file, it is not wired in. Treat this as a Critical bug.
 *   **Path Sanitation**: Verify no URL-encoded directories (e.g., `%5Bid%5D`) exist in the `src/app` tree. These cause silent routing conflicts.
+*   **CSS Variable Integrity**: Grep new CSS/HTML files for self-referencing variables (e.g., `--var: var(--var)`) or undefined fallbacks. Example: `grep -n "var(--[a-z-]*): *var(--[a-z-]*)" src/**/*.{css,html}`. Any hit is a P0 (invisible/broken UI).
+*   **CLI Entry Points**: For any tool with a `main()` or entry point handler, verify it uses ESM-safe detection (`import.meta.url` + `fileURLToPath()`) or CommonJS-safe detection (`require.main === module`), not substring matching on `process.argv[1]`. Substring patterns are fragile and break if the script is renamed or wrapped.
 
 ### Clean Code (Entropy Review)
 Spawn a fresh subagent with **only** the changed files as context — no plan doc, no conversation history, no justification. Use `git diff --name-only HEAD~N` to identify files modified this phase. Give the subagent this prompt:
@@ -24,17 +26,18 @@ Spawn a fresh subagent with **only** the changed files as context — no plan do
 
 Triage findings into three buckets:
 
-| Bucket | Definition | Action |
-|---|---|---|
-| **Blocking** | Violates DRY, YAGNI, or SRP in a way that will cause real future pain | Fix before proceeding |
-| **Improvement** | Valid point, non-urgent | Log to `BUGS.md` as Low DEBT |
-| **Nitpick** | Style, naming preference, minor | Acknowledge, skip |
+| Bucket | Definition | Action | Symptom Patterns |
+|---|---|---|---|
+| **Blocking** | Violates DRY, YAGNI, or SRP in a way that will cause real future pain | Fix before proceeding | "code that solves a problem that doesn't exist yet" / "duplicated 3+ times" / "doing more than one job" / logic should be extracted |
+| **Improvement** | Valid point, non-urgent | Log to `BUGS.md` as Low DEBT | "undocumented", "should be", "fragile", "magic number without comment", "inconsistent with existing pattern" |
+| **Nitpick** | Style, naming preference, minor | Acknowledge, skip | "why", "next person will wonder", "naming inconsistency", "could use shorter name", "comment might help" |
 
 Fix all Blocking issues and re-run tests. If blocking issues were fixed, re-run the subagent on the updated files until its highest-severity finding is Improvement or lower. Note: the subagent will sometimes critique intentional simplicity as "missing abstraction" — the right amount of complexity is the minimum needed for the current task.
 
 ## 2. UX & Aesthetic Audit (The "Chassis" Check)
 Verify the interface and user interaction.
 *   **Design Standards**: Consult `.agent/REFERENCE.md` for Visual and Interaction standards (Teal anchor, Spring physics).
+*   **Documentation Freshness**: Grep `NEXT.md` and `docs/` for stale status markers: `grep -n "Ready to Build\|In progress\|Pending\|Blocked" NEXT.md docs/*.md`. Cross-check against git history and current branch state. If a phase shows as "Ready" or "In progress" but commits exist for that phase from this session, mark as debt and update status.
 *   **Manual Verification**: 
     1. Run `npm run dev`.
     2. Open [http://localhost:3000].
