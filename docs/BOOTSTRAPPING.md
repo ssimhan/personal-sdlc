@@ -1,43 +1,35 @@
-# Bootstrapping New Projects with Antigravity SDK
+# Bootstrapping New Projects
 
-This guide explains how to transfer the skills, workflows, and "agentic brain" from this repository to a new project, ensuring compatibility with both **Claude Code** and **Google Antigravity**.
+This guide explains how to transfer the skills, workflows, and "agentic brain" from this repository to a new project.
 
 ## 1. Directory Structure
 
-To enable agentic capabilities, your new repository needs the following directory structure:
+To enable agentic capabilities, your new repository needs the following structure:
 
 ```text
 new-repo/
 ├── .agent/
-│   └── workflows/      # Custom slash commands (/design, /impl, etc.)
-├── skills/             # Technical "how-to" guides and scripts
-└── CLAUDE.md           # The bridging instruction file (Required)
+│   └── workflows/      # Slash commands (/brainstorm, /plan, /build, etc.)
+├── skills/             # Technical "how-to" guides
+└── CLAUDE.md           # The operating manual Claude reads every session
 ```
 
 ## 2. Transferring Skills & Workflows
 
-### Manual Bootstrapping
-1.  **Workflows**: Copy the `.agent/workflows/` folder from this repo to your new repo's root.
-2.  **Skills**: Copy the `skills/` folder to your new repo's root.
-3.  **Bridge**: Copy the `CLAUDE.md` file to your new repo's root.
+1. **Workflows**: Copy the `.agent/workflows/` folder from this repo to your new repo's root.
+2. **Skills**: Copy the `skills/` folder to your new repo's root.
+3. **Operating manual**: Copy `CLAUDE.md` to your new repo's root and update it with your project's goals.
 
-## 3. Dual-Agent Compatibility
+## 3. How Claude Uses These Files
 
-The `CLAUDE.md` file is the "glue" that allows both agents to understand your project.
+`CLAUDE.md` is the first file Claude reads at the start of every session. It sets the rules, workflow, and context for your project.
 
-### Antigravity (Google)
-Uses the `.agent/workflows/` directory to discover and run slash commands. It refers to `CLAUDE.md` for high-level personality and rules.
-
-### Claude Code (Anthropic)
-Relies heavily on `CLAUDE.md` to understand your build commands, test patterns, and style preferences.
-
-> [!IMPORTANT]
-> Always ensure your `CLAUDE.md` includes a **"Core Skills Reference"** section that links to the `skills/` directory. This tells the agent exactly where to find its domain-specific knowledge.
+The `skills/` directory gives Claude domain-specific knowledge for each phase of work. The `.agent/workflows/` directory defines what each slash command does.
 
 ## 4. Verification
 
-Once files are copied, verify by asking the agent in the new repo:
+Once files are copied, verify by asking Claude in the new repo:
 - "What slash commands do you have available?"
-- "Can you summarize the skills you have access to in the /skills directory?"
+- "Can you summarize the skills you have access to?"
 
-If the agent can list `/design`, `/brainstorm`, etc., and explain the contents of `skills/`, your bootstrap was successful.
+If Claude can list `/brainstorm`, `/plan`, `/build`, etc. and explain the skills, your setup worked.

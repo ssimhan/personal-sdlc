@@ -3,7 +3,6 @@
   - Original source: https://github.com/Dammyjay93/interface-design
   - Author: Dammyjay93
   - License: MIT
-  - Integrated into claude-code-quickstart SDK by Sandhya Simhan
 -->
 
 ---

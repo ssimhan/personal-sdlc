@@ -1,6 +1,6 @@
-# Sandhya Simhan's Antigravity SDK: Operating Manual
+# Claude Code Quickstart: Operating Manual
 
-**Purpose:** This file defines the unified standards for Sandhya Simhan's development environment (created in partnership with **Women Defining AI**), merging her original **Claude Code Quickstart** patterns with **Superpowers** skills and curated "Awesome" enhancements.
+**Purpose:** This file defines the development standards for this project. Claude reads it at the start of every session to stay aligned with your workflow.
 
 ---
 
@@ -14,39 +14,39 @@ You are a high-performance software engineer. Your goals are:
 
 ---
 
-## The Unified Development Lifecycle
+## The Development Lifecycle
 
-Use these **Slash Commands** (triggered via `.agent/workflows/`) to manage the project lifecycle:
+Use these **slash commands** (triggered via `.agent/workflows/`) to manage your project:
 
 ### 1. `/brainstorm` (Discovery & Design)
-- **Goal**: Turn vague ideas into concrete Design Docs.
+- **Goal**: Turn vague ideas into concrete design docs.
 - **Process**: Ask Socratic questions one at a time. Propose 2-3 approaches.
 - **Output**: `docs/plans/YYYY-MM-DD-<topic>-design.md`.
 
-### 2. `/design` (Implementation Planning)
+### 2. `/plan` (Implementation Planning)
 - **Goal**: Break an approved design into bite-sized, TDD-ready tasks.
 - **Key Requirement**: Every task MUST have a failing test and exact file paths.
 - **Output**: `docs/plans/YYYY-MM-DD-<feature-name>.md`.
 
-### 3. `/implement` (Execution)
+### 3. `/build` (Execution)
 - **Goal**: Execute the plan using the RED-GREEN-REFACTOR cycle.
 - **Enforcement**: Watch the test fail, write minimal code, then refactor.
 
-### 4. `/code-review` (Quality Assurance)
+### 4. `/audit` (Quality Assurance)
 - **Goal**: Verify spec compliance and technical excellence.
 - **Requirement**: Run the tests yourself. Evidence over assertions.
 
-### 5. `/connect` (External Integration)
-- **Goal**: Interact with 1000+ apps via Composio.
-- **Process**: Discover app → Authorize → Execute Action → Verify.
+### 5. `/kaizen` (Continuous Improvement)
+- **Goal**: Identify and fix entropy — dead code, inconsistencies, tech debt.
+- **Process**: Review recent changes, propose targeted improvements, apply them.
 
-### 6. `/add-skills` (Meta-Development)
-- **Goal**: Evaluate and integrate skills from external repos.
-- **Process**: Crawl repo → Analyze for SDK fit → Make recommendation.
+### 6. `/log` (Tracking)
+- **Goal**: Log bugs, feature ideas, or technical debt without starting work.
+- **Output**: Appends to the project tracking log.
 
 ### 7. `/closeout` (Session Wrap-up)
-- **Goal**: Maintain project health, continuous improvement, and history.
-- **Process**: Kaizen improvement → Generate Changelog → Update `PROJECT_HISTORY.md` → Push changes.
+- **Goal**: Maintain project health and history.
+- **Process**: Kaizen → Changelog → Update `PROJECT_HISTORY.md` → Commit & push.
 
 ---
 
@@ -62,16 +62,12 @@ Use these **Slash Commands** (triggered via `.agent/workflows/`) to manage the p
 
 ## Core Skills Reference
 
-Refer to the `skills/` directory for detailed "how-to" guides:
-- `ui-development/`: Audience-centric design with flexible systems (shadcn, Mantine).
+Refer to the `skills/` directory for detailed guides:
+- `ui-development/`: Audience-centric design with flexible systems.
 - `debugging/`: Systematic root cause analysis and verification.
-- `git-ops/`: Isolated worktrees and branch management.
-- `observability/`: Agentic traceability and step-by-step logging.
-- `integrations/`: Composio Connect for cross-platform automation.
 - `test-driven-development/`: The RED-GREEN-REFACTOR masterclass.
 - `kaizen/`: Continuous improvement methodology for code and process.
-- `dispatching-parallel-agents/`: Scaling work across multiple concurrent agents.
-- `writing-skills/`: Guidelines for authoring new skills for this SDK.
+- `writing-skills/`: Guidelines for authoring new skills.
 
 ---
 
@@ -81,6 +77,6 @@ Before finalizing any task, run through this checklist:
 - [ ] **Completeness**: All required fields populated, no placeholders.
 - [ ] **Tests Passing**: Full suite is green, with 0 regressions.
 - [ ] **Documentation**: `PROJECT_HISTORY.md` updated with session notes.
-- [ ] **Spec Compliance**: Matches the user's intent from the Design Doc.
+- [ ] **Spec Compliance**: Matches the user's intent from the design doc.
 
 **Remember:** One missing check = invalid output. Verification is the gate to completion.
