@@ -26,38 +26,25 @@
 
   .cursor { width:8px; height:8px; background:var(--teal); border-radius:50%; position:fixed; pointer-events:none; z-index:9999; mix-blend-mode:screen; transition:opacity 0.2s; }
 
-  /* Slide number — only visible on mouse move */
   #slide-num {
     position:fixed; bottom:24px; right:32px;
     font-family:'DM Mono',monospace; font-size:11px; letter-spacing:0.15em;
-    color:var(--text-dim);
-    opacity:0;
-    transition:opacity 0.4s ease;
-    z-index:1000;
-    pointer-events:none;
+    color:var(--text-dim); opacity:0; transition:opacity 0.4s ease;
+    z-index:1000; pointer-events:none;
   }
   body.mouse-active #slide-num { opacity:1; }
 
-  /* Progress line */
   #progress { position:fixed; bottom:0; left:0; height:1px; background:rgba(45,212,191,0.4); z-index:1000; transition:width 0.5s var(--ease-out); }
 
-  /* Stage */
   #stage { width:100vw; height:100vh; position:relative; overflow:hidden; }
-
-  /* Noise */
   #stage::after { content:''; position:absolute; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events:none; z-index:50; }
 
-  /* Grid */
   .grid-bg { position:absolute; inset:0; background-image:linear-gradient(rgba(45,212,191,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(45,212,191,0.03) 1px,transparent 1px); background-size:64px 64px; pointer-events:none; }
-
-  /* Glow */
   .blob { position:absolute; border-radius:50%; filter:blur(100px); pointer-events:none; }
 
-  /* ---- SCENE ---- */
   .scene { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.55s var(--ease-out); }
   .scene.active { opacity:1; pointer-events:all; }
 
-  /* Reveal */
   .r { opacity:0; transform:translateY(20px); transition:opacity 0.65s var(--ease-out), transform 0.65s var(--ease-out); }
   .scene.active .r { opacity:1; transform:none; }
   .d1{transition-delay:.08s} .d2{transition-delay:.2s} .d3{transition-delay:.35s}
@@ -70,16 +57,9 @@
   .rl { opacity:0; transform:translateX(-28px); transition:opacity 0.65s var(--ease-out),transform 0.65s var(--ease-out); }
   .scene.active .rl { opacity:1; transform:none; }
 
-  /* Chip */
   .chip { display:inline-flex; align-items:center; gap:7px; padding:5px 14px; border-radius:100px; background:rgba(45,212,191,0.07); border:1px solid rgba(45,212,191,0.18); font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--teal); }
   .chip .dot { width:4px; height:4px; border-radius:50%; background:var(--teal); }
 
-  /* Image placeholder */
-  .img-box { border:1px dashed rgba(45,212,191,0.25); background:rgba(45,212,191,0.02); border-radius:6px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:20px; text-align:center; }
-  .img-box .il { font-family:'DM Mono',monospace; font-size:10px; color:var(--teal); opacity:0.6; letter-spacing:0.1em; }
-  .img-box .id { font-size:11px; color:var(--text-dim); line-height:1.5; }
-
-  /* Terminal */
   .term { background:#0D1117; border:1px solid rgba(45,212,191,0.15); border-radius:8px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
   .term-bar { background:#161B22; padding:10px 16px; display:flex; align-items:center; gap:7px; }
   .tdot { width:11px; height:11px; border-radius:50%; }
@@ -99,7 +79,7 @@
   @keyframes fp { 0%{opacity:0;transform:translateY(0)} 20%{opacity:0.5} 80%{opacity:0.2} 100%{opacity:0;transform:translateY(-100px)} }
 
   /* ========================= SCENE 1 — CONFESSION ========================= */
-  #s1 { background:var(--dark2); align-items:flex-end; padding:0 10vw 10vh; }
+  #s1 { background:var(--dark2); align-items:center; justify-content:center; padding:0 10vw; }
   #s1 .b1 { width:700px; height:350px; background:radial-gradient(ellipse,rgba(124,58,237,0.1) 0%,transparent 70%); top:40%; left:50%; transform:translate(-50%,-50%); }
   #s1 blockquote { font-family:'Playfair Display',serif; font-size:clamp(34px,4.5vw,70px); font-weight:400; line-height:1.2; }
   #s1 .dim { color:var(--text-dim); }
@@ -111,14 +91,17 @@
   #s2 .real { font-family:'Playfair Display',serif; font-size:clamp(64px,9vw,140px); font-weight:900; color:var(--teal); line-height:1; letter-spacing:-0.02em; z-index:2; text-align:center; }
   #s2 .sub { font-size:clamp(16px,1.8vw,24px); color:var(--text-dim); margin-top:20px; font-weight:300; z-index:2; }
 
-  /* ========================= SCENE 3 — BUILDS ========================= */
-  #s3 { background:var(--dark2); padding:0 10vw; align-items:center; justify-content:flex-start; flex-direction:column; padding-top:8vh; gap:40px; }
+  /* ========================= SCENE 3 — BUILDS (app grid) ========================= */
+  #s3 { background:var(--dark2); padding:0 8vw; flex-direction:column; justify-content:center; gap:36px; }
   #s3 .b1 { width:500px; height:500px; background:radial-gradient(circle,rgba(245,200,66,0.07) 0%,transparent 70%); top:-100px; right:-100px; }
-  #s3 ul { list-style:none; display:flex; flex-direction:column; gap:14px; width:100%; }
-  #s3 ul li { display:flex; align-items:center; gap:18px; font-family:'Playfair Display',serif; font-size:clamp(22px,2.8vw,42px); font-weight:700; }
-  #s3 ul li .dot { width:7px; height:7px; background:var(--teal); border-radius:50%; flex-shrink:0; }
-  #s3 .kicker { font-size:clamp(14px,1.4vw,18px); color:var(--text-dim); font-style:italic; }
-  #s3 .kicker em { color:var(--mustard); font-style:normal; }
+  #s3 .apps-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; width:100%; }
+  #s3 .app-pill { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:18px 22px; display:flex; align-items:center; gap:14px; transition:border-color 0.3s; }
+  #s3 .app-pill:hover { border-color:rgba(45,212,191,0.25); }
+  #s3 .app-icon { font-size:28px; flex-shrink:0; }
+  #s3 .app-name { font-size:clamp(14px,1.4vw,17px); font-weight:600; }
+  #s3 .app-desc { font-size:12px; color:var(--text-dim); margin-top:2px; }
+  #s3 .kicker { font-size:clamp(13px,1.3vw,16px); color:var(--text-dim); border-left:2px solid rgba(45,212,191,0.4); padding-left:18px; line-height:1.6; }
+  #s3 .kicker em { color:var(--teal); font-style:normal; font-weight:600; }
 
   /* ========================= SCENE 4 — HELEN ========================= */
   #s4 { background:var(--dark3); padding:0 10vw; gap:60px; }
@@ -129,6 +112,9 @@
   #s4 .unlock { font-family:'Playfair Display',serif; font-size:clamp(22px,2.5vw,38px); font-style:italic; color:var(--teal); line-height:1.3; }
   #s4 .detail { font-size:clamp(14px,1.3vw,17px); color:var(--text-dim); line-height:1.7; }
   #s4 .attr { font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim); letter-spacing:0.08em; }
+  .img-box { border:1px dashed rgba(45,212,191,0.25); background:rgba(45,212,191,0.02); border-radius:6px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:20px; text-align:center; }
+  .img-box .il { font-family:'DM Mono',monospace; font-size:10px; color:var(--teal); opacity:0.6; letter-spacing:0.1em; }
+  .img-box .id { font-size:11px; color:var(--text-dim); line-height:1.5; }
 
   /* ========================= SCENE 5 — TERMINAL ========================= */
   #s5 { background:var(--dark); padding:0 10vw; align-items:center; gap:60px; }
@@ -142,24 +128,29 @@
 
   /* ========================= SCENE 6 — HOME DEPOT ========================= */
   #s6 { background:var(--dark2); padding:0 8vw; gap:40px; }
-  .split { flex:1; padding:48px 40px; border-radius:12px; display:flex; flex-direction:column; gap:20px; }
+  .split { flex:1; padding:48px 40px; border-radius:12px; display:flex; flex-direction:column; gap:16px; }
   .split.a { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07); }
   .split.b { background:rgba(45,212,191,0.04); border:1px solid rgba(45,212,191,0.18); }
   .split .lbl { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-dim); }
+  .split .panel-icon { font-size:48px; margin-bottom:4px; }
   .split .title { font-family:'Playfair Display',serif; font-size:clamp(26px,3vw,46px); font-weight:700; line-height:1.15; }
   .split.a .title { color:var(--text-dim); }
   .split.b .title { color:var(--teal); }
   .split .body { font-size:clamp(13px,1.3vw,16px); color:var(--text-dim); line-height:1.7; }
   .vs { display:flex; align-items:center; justify-content:center; font-family:'Playfair Display',serif; font-size:28px; font-style:italic; color:rgba(255,255,255,0.15); flex-shrink:0; align-self:center; }
 
-  /* ========================= SCENE 7 — FLOOR ========================= */
+  /* ========================= SCENE 7 — AI RAISES THE FLOOR ========================= */
   #s7 { background:var(--dark); flex-direction:column; text-align:center; padding:0 12vw; gap:0; }
   #s7 .b1 { width:700px; height:700px; background:radial-gradient(circle,rgba(45,212,191,0.06) 0%,transparent 60%); top:50%; left:50%; transform:translate(-50%,-50%); }
-  #s7 .crossed { font-family:'Playfair Display',serif; font-size:clamp(18px,1.8vw,26px); color:var(--text-dim); text-decoration:line-through; text-decoration-color:rgba(255,255,255,0.25); margin-bottom:36px; }
-  #s7 .claim { font-family:'Playfair Display',serif; font-size:clamp(48px,6.5vw,100px); font-weight:900; line-height:1; letter-spacing:-0.02em; margin-bottom:32px; }
-  #s7 .claim .teal { color:var(--teal); }
-  #s7 .q-box { display:inline-block; padding:20px 36px; background:rgba(45,212,191,0.05); border:1px solid rgba(45,212,191,0.18); border-radius:8px; font-size:clamp(15px,1.6vw,22px); line-height:1.5; }
-  #s7 .q-box em { color:var(--teal); font-style:normal; font-weight:600; }
+  #s7 .pre-line { font-family:'DM Mono',monospace; font-size:clamp(12px,1.2vw,15px); color:var(--text-dim); margin-bottom:20px; font-style:italic; }
+  #s7 .big-stat { font-family:'Playfair Display',serif; font-size:clamp(80px,12vw,160px); font-weight:900; color:var(--teal); line-height:1; }
+  #s7 .stat-label { font-size:clamp(16px,1.6vw,22px); color:var(--text); font-weight:300; margin-bottom:32px; }
+  #s7 .truth { font-size:clamp(18px,2vw,26px); font-weight:300; line-height:1.4; color:var(--text); max-width:640px; margin:0 auto 36px; }
+  #s7 .truth strong { font-weight:700; color:var(--teal); }
+  #s7 .floor-viz { width:400px; height:52px; position:relative; border:1px solid rgba(45,212,191,0.18); border-radius:8px; overflow:hidden; background:rgba(255,255,255,0.02); margin:0 auto; }
+  #s7 .floor-bar { height:100%; background:linear-gradient(90deg,var(--teal),var(--mustard)); width:0%; transition:width 1.5s cubic-bezier(0.4,0,0.2,1) 0.4s; border-radius:6px; }
+  #s7.active .floor-bar { width:75%; }
+  #s7 .floor-labels { display:flex; justify-content:space-between; margin-top:10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--text-dim); letter-spacing:0.08em; width:400px; margin-left:auto; margin-right:auto; }
 
   /* ========================= SCENE 8 — REAL Q ========================= */
   #s8 { background:var(--dark3); padding:0 10vw; flex-direction:column; justify-content:center; gap:0; }
@@ -194,7 +185,6 @@
   #s11 .left { flex:1; max-width:480px; display:flex; flex-direction:column; gap:20px; }
   #s11 .head { font-family:'Playfair Display',serif; font-size:clamp(32px,3.8vw,58px); font-weight:700; line-height:1.15; }
   #s11 .head em { color:var(--plum-light); font-style:italic; }
-  #s11 .sub { font-size:clamp(14px,1.3vw,17px); color:var(--text-dim); line-height:1.7; }
   #s11 .warn { padding:18px 22px; background:rgba(245,200,66,0.05); border:1px solid rgba(245,200,66,0.18); border-radius:6px; font-size:14px; color:var(--mustard); font-style:italic; line-height:1.6; }
   #s11 .right { flex:1; display:flex; flex-direction:column; gap:20px; }
   .dc { padding:26px 30px; border-radius:8px; display:flex; flex-direction:column; gap:8px; }
@@ -219,20 +209,23 @@
   .tt { font-size:clamp(13px,1.3vw,16px); line-height:1.6; }
   .tt strong { color:var(--teal); }
 
-  /* ========================= SCENE 13 — SDLC ========================= */
+  /* ========================= SCENE 13 — SDLC (step cards) ========================= */
   #s13 { background:var(--dark); padding:5vh 8vw; flex-direction:column; gap:28px; }
   #s13 .grid-bg { opacity:0.08; }
   #s13 .top { width:100%; display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:16px; }
   #s13 .head { font-family:'Playfair Display',serif; font-size:clamp(26px,3vw,46px); font-weight:700; }
   #s13 .repo { font-family:'DM Mono',monospace; font-size:13px; color:var(--teal); padding:7px 14px; border:1px solid rgba(45,212,191,0.25); border-radius:4px; background:rgba(45,212,191,0.04); text-decoration:none; }
-  table.wf { width:100%; border-collapse:collapse; }
-  table.wf th { text-align:left; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.15em; text-transform:uppercase; color:var(--text-dim); padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.07); }
-  table.wf td { padding:12px 14px; border-bottom:1px solid rgba(255,255,255,0.04); font-size:clamp(12px,1.2vw,14px); vertical-align:middle; }
-  table.wf tr:last-child td { border-bottom:none; }
-  table.wf .sn { font-family:'DM Mono',monospace; color:var(--text-dim); width:36px; }
-  table.wf .sc { font-family:'DM Mono',monospace; color:var(--teal); width:120px; }
-  table.wf .sd { color:var(--text-dim); }
-  table.wf tr:hover td { background:rgba(45,212,191,0.02); }
+  #s13 .steps { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; width:100%; }
+  #s13 .step-card { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:18px 16px; transition:border-color 0.3s; opacity:0; transform:translateY(16px); }
+  #s13.active .step-card { animation:stepIn 0.4s forwards; }
+  #s13.active .step-card:nth-child(1){animation-delay:0.05s} #s13.active .step-card:nth-child(2){animation-delay:0.1s}
+  #s13.active .step-card:nth-child(3){animation-delay:0.15s} #s13.active .step-card:nth-child(4){animation-delay:0.2s}
+  #s13.active .step-card:nth-child(5){animation-delay:0.25s} #s13.active .step-card:nth-child(6){animation-delay:0.3s}
+  #s13.active .step-card:nth-child(7){animation-delay:0.35s} #s13.active .step-card:nth-child(8){animation-delay:0.4s}
+  @keyframes stepIn { to { opacity:1; transform:translateY(0); } }
+  #s13 .step-cmd { font-family:'DM Mono',monospace; font-size:15px; font-weight:700; color:var(--teal); margin-bottom:6px; }
+  #s13 .step-name { font-size:13px; font-weight:600; color:var(--text); margin-bottom:4px; }
+  #s13 .step-desc { font-size:12px; color:var(--text-dim); line-height:1.5; }
   #s13 .hint { padding:14px 20px; background:rgba(245,200,66,0.05); border:1px solid rgba(245,200,66,0.14); border-radius:5px; font-size:13px; color:var(--mustard); font-family:'DM Mono',monospace; }
 
   /* ========================= SCENE 14 — TOOL FLOW ========================= */
@@ -256,25 +249,28 @@
   #s14 .foot { font-size:13px; color:var(--text-dim); font-style:italic; border-top:1px solid rgba(255,255,255,0.05); padding-top:16px; }
   #s14 .foot em { color:var(--teal); font-style:normal; }
 
-  /* ========================= SCENE 15 — MAKE IT WORK ========================= */
-  #s15 { background:var(--dark2); padding:0 10vw; flex-direction:column; justify-content:center; gap:40px; }
+  /* ========================= SCENE 15 — MAKE IT WORK (stage dots) ========================= */
+  #s15 { background:var(--dark2); padding:0 8vw; flex-direction:column; justify-content:center; gap:36px; }
   #s15 .b1 { width:600px; height:600px; background:radial-gradient(circle,rgba(45,212,191,0.05) 0%,transparent 70%); top:50%; right:-100px; transform:translateY(-50%); }
   #s15 .head { font-family:'Playfair Display',serif; font-size:clamp(36px,5vw,76px); font-weight:900; line-height:1.05; letter-spacing:-0.02em; }
   #s15 .head .y { color:var(--mustard); }
-  .three { display:flex; gap:20px; width:100%; }
-  .sc { flex:1; padding:28px 24px; border-radius:10px; display:flex; flex-direction:column; gap:10px; position:relative; overflow:hidden; }
-  .sc::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
-  .sc.w { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); }
-  .sc.w::before { background:var(--teal); }
-  .sc.ri { background:rgba(167,139,250,0.05); border:1px solid rgba(167,139,250,0.14); }
-  .sc.ri::before { background:var(--plum-light); }
-  .sc.fa { background:rgba(245,200,66,0.05); border:1px solid rgba(245,200,66,0.18); }
-  .sc.fa::before { background:var(--mustard); }
-  .sc .st { font-family:'Playfair Display',serif; font-size:clamp(18px,2vw,28px); font-weight:700; }
-  .sc.w .st { color:var(--teal); } .sc.ri .st { color:var(--plum-light); } .sc.fa .st { color:var(--mustard); }
-  .sc .sd { font-size:13px; color:var(--text-dim); line-height:1.6; }
-  .sc .stag { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.2); margin-top:auto; padding-top:10px; border-top:1px solid rgba(255,255,255,0.04); }
-  #s15 .credit { font-family:'DM Mono',monospace; font-size:11px; color:rgba(255,255,255,0.2); }
+  #s15 .stages { display:flex; gap:0; width:100%; position:relative; }
+  #s15 .stages::before { content:''; position:absolute; top:24px; left:0; right:0; height:1px; background:linear-gradient(90deg,var(--teal),var(--mustard),var(--plum-light)); z-index:0; }
+  #s15 .stage-item { flex:1; text-align:center; position:relative; z-index:1; opacity:0; transform:translateY(20px); }
+  #s15.active .stage-item { animation:stageIn 0.5s forwards; }
+  #s15.active .stage-item:nth-child(1){animation-delay:0.1s}
+  #s15.active .stage-item:nth-child(2){animation-delay:0.3s}
+  #s15.active .stage-item:nth-child(3){animation-delay:0.5s}
+  @keyframes stageIn { to { opacity:1; transform:translateY(0); } }
+  #s15 .stage-dot { width:48px; height:48px; border-radius:50%; margin:0 auto 20px; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; position:relative; z-index:2; }
+  #s15 .stage-item:nth-child(1) .stage-dot { background:var(--teal); color:var(--dark); }
+  #s15 .stage-item:nth-child(2) .stage-dot { background:var(--mustard); color:var(--dark); }
+  #s15 .stage-item:nth-child(3) .stage-dot { background:var(--plum-light); color:var(--dark); }
+  #s15 .stage-label { font-size:clamp(18px,2vw,26px); font-weight:700; color:var(--text); margin-bottom:10px; }
+  #s15 .stage-desc { font-size:clamp(12px,1.2vw,14px); color:var(--text-dim); line-height:1.5; max-width:200px; margin:0 auto; }
+  #s15 .stage-tag { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(255,255,255,0.2); margin-top:10px; }
+  #s15 .callout { font-family:'Playfair Display',serif; font-size:clamp(15px,1.5vw,20px); font-style:italic; color:var(--text-dim); border-top:1px solid rgba(255,255,255,0.05); padding-top:20px; line-height:1.6; }
+  #s15 .callout em { color:var(--mustard); font-style:normal; }
 
   /* ========================= SCENE 16 — QUICKBOOKS ========================= */
   #s16 { background:var(--dark); padding:0 10vw; gap:72px; }
@@ -283,7 +279,6 @@
   #s16 .head { font-family:'Playfair Display',serif; font-size:clamp(30px,3.5vw,54px); font-weight:900; line-height:1.1; letter-spacing:-0.02em; }
   #s16 .head .y { color:var(--mustard); }
   #s16 .sub { font-size:clamp(13px,1.3vw,17px); color:var(--text-dim); line-height:1.7; }
-  #s16 .punchline { font-family:'Playfair Display',serif; font-size:clamp(15px,1.6vw,22px); font-style:italic; color:var(--text); line-height:1.5; }
   #s16 .right { flex:1; display:flex; flex-direction:column; gap:10px; }
   .dr { display:flex; align-items:center; gap:14px; padding:14px 18px; border-radius:7px; font-size:clamp(12px,1.2vw,15px); }
   .dr.base { background:rgba(45,212,191,0.06); border:1px solid rgba(45,212,191,0.2); color:var(--teal); font-weight:600; }
@@ -293,18 +288,23 @@
   .dr.big::before { content:'→'; color:var(--mustard); flex-shrink:0; }
   .dr .arr { color:var(--mustard); font-size:11px; margin-left:auto; flex-shrink:0; }
 
-  /* ========================= SCENE 17 — STARTERS ========================= */
-  #s17 { background:var(--dark2); padding:0 10vw; flex-direction:column; justify-content:center; gap:36px; }
+  /* ========================= SCENE 17 — STARTERS (project cards with icons) ========================= */
+  #s17 { background:var(--dark2); padding:0 8vw; flex-direction:column; justify-content:center; gap:32px; }
   #s17 .head { font-family:'Playfair Display',serif; font-size:clamp(26px,3vw,46px); font-weight:700; line-height:1.2; }
-  .scards { display:flex; gap:28px; width:100%; }
-  .scard { flex:1; padding:36px 32px; border-radius:12px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:14px; transition:border-color 0.3s; }
+  .scards { display:grid; grid-template-columns:1fr 1fr; gap:28px; width:100%; }
+  .scard { padding:36px 32px; border-radius:16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); display:flex; flex-direction:column; gap:12px; transition:border-color 0.3s; position:relative; overflow:hidden; }
   .scard:hover { border-color:rgba(45,212,191,0.25); }
+  .scard::before { content:''; position:absolute; top:-50px; right:-50px; width:160px; height:160px; border-radius:50%; opacity:0.06; }
+  .scard:nth-child(1)::before { background:var(--teal); }
+  .scard:nth-child(2)::before { background:var(--mustard); }
+  .scard .project-icon { font-size:40px; margin-bottom:4px; }
   .scard .sn { font-family:'DM Mono',monospace; font-size:10px; color:var(--teal); letter-spacing:0.15em; text-transform:uppercase; }
-  .scard .stitle { font-family:'Playfair Display',serif; font-size:clamp(20px,2.3vw,34px); font-weight:700; line-height:1.2; }
-  .scard .sdesc { font-size:clamp(13px,1.2vw,15px); color:var(--text-dim); line-height:1.7; }
+  .scard .stitle { font-family:'Playfair Display',serif; font-size:clamp(20px,2.3vw,32px); font-weight:700; line-height:1.2; }
+  .scard .sdesc { font-size:clamp(13px,1.2vw,15px); color:var(--text-dim); line-height:1.6; }
   .scard .stags { display:flex; gap:7px; flex-wrap:wrap; }
   .tag { font-family:'DM Mono',monospace; font-size:10px; padding:3px 9px; border-radius:3px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); color:var(--text-dim); }
   .scard .scrit { margin-top:auto; padding:14px 18px; background:rgba(45,212,191,0.05); border:1px solid rgba(45,212,191,0.14); border-radius:5px; font-size:13px; color:var(--teal); font-style:italic; line-height:1.5; }
+  .scard .stime { position:absolute; top:24px; right:24px; font-size:12px; color:var(--text-dim); background:var(--dark); border:1px solid rgba(255,255,255,0.07); border-radius:20px; padding:5px 12px; font-family:'DM Mono',monospace; }
 
   /* ========================= SCENE 18 — 4HR ========================= */
   #s18 { background:var(--dark3); flex-direction:column; text-align:center; padding:0 12vw; justify-content:center; }
@@ -334,12 +334,22 @@
   .cl .dim { color:var(--text-dim); }
   #s20 .closer { font-family:'Playfair Display',serif; font-size:clamp(26px,3.3vw,52px); font-weight:700; font-style:italic; color:var(--teal); line-height:1.2; }
 
-  /* ========================= SCENE 21 — FINAL Q ========================= */
+  /* ========================= SCENE 21 — FINAL Q (checklist + particles) ========================= */
   #s21 { background:var(--dark); flex-direction:column; text-align:center; justify-content:center; padding:0 10vw; gap:0; }
   #s21 .b1 { width:1000px; height:1000px; background:radial-gradient(circle,rgba(45,212,191,0.05) 0%,transparent 60%); top:50%; left:50%; transform:translate(-50%,-50%); }
   #s21 .b2 { width:600px; height:600px; background:radial-gradient(circle,rgba(124,58,237,0.09) 0%,transparent 70%); bottom:-100px; right:-100px; }
-  #s21 .preq { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-dim); margin-bottom:36px; }
-  #s21 .fq { font-family:'Playfair Display',serif; font-size:clamp(40px,6.5vw,100px); font-weight:900; line-height:1.02; letter-spacing:-0.02em; margin-bottom:52px; }
+  .fp { position:absolute; border-radius:50%; background:var(--teal); opacity:0; animation:floatUp linear infinite; }
+  @keyframes floatUp { 0%{transform:translateY(100vh) scale(0);opacity:0} 10%{opacity:0.4} 90%{opacity:0.1} 100%{transform:translateY(-20vh) scale(1);opacity:0} }
+  #s21 .checklist { display:flex; flex-direction:column; gap:14px; margin-bottom:44px; text-align:left; max-width:700px; margin-left:auto; margin-right:auto; }
+  #s21 .check-item { display:flex; align-items:flex-start; gap:14px; font-size:clamp(15px,1.6vw,20px); color:var(--text-dim); line-height:1.5; opacity:0; transform:translateX(-20px); }
+  #s21.active .check-item { animation:slideCheck 0.5s forwards; }
+  #s21.active .check-item:nth-child(1){animation-delay:0.1s}
+  #s21.active .check-item:nth-child(2){animation-delay:0.3s}
+  #s21.active .check-item:nth-child(3){animation-delay:0.5s}
+  @keyframes slideCheck { to { opacity:1; transform:translateX(0); } }
+  #s21 .check-icon { color:var(--teal); font-size:18px; flex-shrink:0; margin-top:3px; }
+  #s21 .preq { font-family:'DM Mono',monospace; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:var(--text-dim); margin-bottom:28px; }
+  #s21 .fq { font-family:'Playfair Display',serif; font-size:clamp(36px,5.5vw,80px); font-weight:900; line-height:1.02; letter-spacing:-0.02em; margin-bottom:40px; }
   #s21 .fq em { font-style:italic; color:var(--teal); display:block; }
   .credits { display:flex; gap:36px; justify-content:center; flex-wrap:wrap; }
   .cri { font-family:'DM Mono',monospace; font-size:10px; color:rgba(255,255,255,0.25); letter-spacing:0.06em; text-align:left; line-height:1.6; }
@@ -366,8 +376,7 @@
   <div style="z-index:2;display:flex;flex-direction:column;align-items:center;">
     <p class="eyebrow r d1">Maven — Live Session</p>
     <h1 class="r d2">AI-Native<br><em>Vibe Coding</em></h1>
-    <p class="r d3" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--text-dim);letter-spacing:0.15em;margin-bottom:20px;">PMM → Full-Stack Builder</p>
-    <p class="byline r d4"><strong>Sandhya Simhan</strong> &nbsp;·&nbsp; Glean &nbsp;·&nbsp; Women Defining AI</p>
+    <p class="byline r d3"><strong>Sandhya Simhan</strong> &nbsp;·&nbsp; Glean &nbsp;·&nbsp; Women Defining AI</p>
   </div>
 </div>
 
@@ -380,7 +389,7 @@
       <span style="color:var(--text);">I thought it was permanent.</span>
     </blockquote>
     <div style="height:32px;"></div>
-    <blockquote class="r d2" style="font-size:clamp(20px,2vw,32px);color:var(--text-dim);font-family:'Playfair Display',serif;font-weight:400;line-height:1.3;">I wasn't. I made peace with that.</blockquote>
+    <blockquote class="r d2" style="font-size:clamp(20px,2vw,32px);color:var(--text-dim);font-family:'Playfair Display',serif;font-weight:400;line-height:1.3;">I made peace with it. I was wrong.</blockquote>
   </div>
 </div>
 
@@ -394,19 +403,38 @@
   </div>
 </div>
 
-<!-- 3: BUILDS -->
+<!-- 3: BUILDS (app grid from purple s4) -->
 <div class="scene" id="s3">
   <div class="blob b1"></div>
   <div style="z-index:2;width:100%;">
-    <div class="chip r d1" style="margin-bottom:28px;"><span class="dot"></span>5 months. No code.</div>
-    <ul>
-      <li class="r d2"><span class="dot"></span>Meal planner</li>
-      <li class="r d3"><span class="dot"></span>Read-it-later app</li>
-      <li class="r d4"><span class="dot"></span>Automated marketing engine</li>
-      <li class="r d5"><span class="dot"></span>Chrome extension</li>
-      <li class="r d6"><span class="dot"></span>Prod repo access from my Head of Eng</li>
-    </ul>
-    <p class="kicker r d7" style="margin-top:36px;">In 30 minutes — <em>a clear enough picture to know exactly where to start.</em></p>
+    <div class="chip r d1" style="margin-bottom:28px;"><span class="dot"></span>5 months. No prior code.</div>
+    <div class="apps-grid">
+      <div class="app-pill r d2">
+        <div class="app-icon">🥗</div>
+        <div><div class="app-name">Meal Planner</div><div class="app-desc">Family dinner, no fights</div></div>
+      </div>
+      <div class="app-pill r d3">
+        <div class="app-icon">📚</div>
+        <div><div class="app-name">Read-It-Later</div><div class="app-desc">Replaced Pocket ($8/mo)</div></div>
+      </div>
+      <div class="app-pill r d3">
+        <div class="app-icon">⚙️</div>
+        <div><div class="app-name">Marketing Engine</div><div class="app-desc">Runs while I sleep</div></div>
+      </div>
+      <div class="app-pill r d4">
+        <div class="app-icon">🧩</div>
+        <div><div class="app-name">Chrome Extension</div><div class="app-desc">Custom browser tooling</div></div>
+      </div>
+      <div class="app-pill r d4">
+        <div class="app-icon">🗄️</div>
+        <div><div class="app-name">Context Vault</div><div class="app-desc">My second brain</div></div>
+      </div>
+      <div class="app-pill r d5">
+        <div class="app-icon">🎨</div>
+        <div><div class="app-name">In-Product Mockups</div><div class="app-desc">Earned prod repo access</div></div>
+      </div>
+    </div>
+    <p class="kicker r d6" style="margin-top:28px;">$8–10/mo × 5 SaaS tools → <em>$20/mo Claude subscription → build them all.</em></p>
   </div>
 </div>
 
@@ -417,9 +445,8 @@
     <div class="chip r d1"><span class="dot"></span>Section 1 — Mindset</div>
     <h2 class="shift r d2">The shift wasn't<br><em>"I should learn to code."</em></h2>
     <p class="unlock r d3">wait — <em style="color:var(--text);font-style:normal;">this is actually possible?</em></p>
-    <p class="detail r d4">Helen Lee Kupp (Women Defining AI) showed me Claude Code. Simple tool. Scanned her Slack + email. Surfaced what she missed.</p>
-    <p class="detail r d5" style="color:var(--text);">Then: <em style="color:var(--teal);">"You can build whatever Chrome extension you want."</em></p>
-    <p class="attr r d6">Helen Lee Kupp — Founder, Women Defining AI</p>
+    <p class="detail r d4">Helen Lee Kupp showed me Claude Code scanning her Slack + email in real time.<br>Then: <em style="color:var(--teal);">"You can build whatever Chrome extension you want."</em></p>
+    <p class="attr r d5">Helen Lee Kupp — Founder, Women Defining AI</p>
   </div>
   <div class="right" style="z-index:2;">
     <div class="img-box r d3" style="width:100%;aspect-ratio:4/5;">
@@ -435,7 +462,7 @@
   <div class="left" style="z-index:2;">
     <p class="reaction r d1">"That terminal thing?<br><span class="aside">Helen, this seems like a lot."</span></p>
     <p class="insight r d3"><strong>Build once, use forever.</strong> Not a feature — a different relationship with software.</p>
-    <p class="insight r d4" style="color:var(--text-dim);">$8–10/mo × 5 SaaS products → $20/mo Claude subscription → build all of them.</p>
+    <p class="insight r d4" style="color:var(--text-dim);">$8–10/mo × 5 SaaS → $20/mo Claude → build all of them.</p>
   </div>
   <div class="right" style="z-index:2;">
     <div class="term r d2">
@@ -460,44 +487,44 @@
 <div class="scene" id="s6">
   <div class="split a r d1">
     <p class="lbl">Every no-code tool</p>
+    <div class="panel-icon">🖼️</div>
     <h3 class="title">Color-by-<br>Number</h3>
     <p class="body">Looks like yours — as long as you stay inside someone else's lines.</p>
-    <div class="img-box" style="aspect-ratio:16/9;">
-      <span class="il">[IMAGE]</span>
-      <span class="id">Color-by-number kit, constrained | 16:9 | desaturated, controlled</span>
-    </div>
   </div>
   <div class="vs r d2">vs</div>
   <div class="split b r d3">
     <p class="lbl">Claude Code</p>
+    <div class="panel-icon">🏗️</div>
     <h3 class="title">Blank Canvas +<br>Hardware Store</h3>
     <p class="body">Build whatever you want. Make expensive mistakes. Learn a lot.</p>
-    <div class="img-box" style="aspect-ratio:16/9;">
-      <span class="il">[IMAGE]</span>
-      <span class="id">Hardware store aisle or blank canvas in bright studio | 16:9 | open, possibility, dramatic light</span>
+  </div>
+</div>
+
+<!-- 7: AI RAISES THE FLOOR (floor viz from purple s6) -->
+<div class="scene" id="s7">
+  <div class="blob b1"></div>
+  <div style="z-index:2;display:flex;flex-direction:column;align-items:center;">
+    <p class="pre-line r d1">"AI makes you average." — yes, but:</p>
+    <p class="big-stat r d2">0</p>
+    <p class="stat-label r d3">was my coding baseline</p>
+    <p class="truth r d4">Whatever AI produces is already <strong>better than what I could do alone.</strong><br>AI raises the floor — and it's only going up.</p>
+    <div class="floor-viz r d5">
+      <div class="floor-bar"></div>
+    </div>
+    <div class="floor-labels r d5">
+      <span>Sub-average coder (me)</span>
+      <span>AI-assisted output</span>
     </div>
   </div>
 </div>
 
-<!-- 7: AI RAISES THE FLOOR -->
-<div class="scene" id="s7">
-  <div class="blob b1"></div>
-  <div style="z-index:2;">
-    <p class="crossed r d1">"AI makes you average."</p>
-    <h2 class="claim r d2">AI raises<br><span class="teal">the floor.</span></h2>
-    <div class="q-box r d3">The question is not <span style="color:var(--text-dim)">whether you're technical enough.</span><br>
-    It's whether you have a <em>clear enough idea</em> of what you want to build.</div>
-  </div>
-</div>
-
-<!-- 8: REAL QUESTION (bridge) -->
+<!-- 8: REAL QUESTION -->
 <div class="scene" id="s8">
   <div class="blob b1"></div>
   <div style="z-index:2;width:100%;">
     <p class="old r d1">"Am I technical enough?"</p>
     <p class="new-lbl r d2">→ the real question</p>
     <h2 class="new r d3">"Do I have a clear enough idea of <em>what I want to build?</em>"</h2>
-    <p class="r d4" style="margin-top:36px;font-size:clamp(13px,1.3vw,17px);color:var(--text-dim);max-width:600px;line-height:1.7;">The meal planner is about to teach us exactly what happens when the answer is no.</p>
   </div>
 </div>
 
@@ -506,7 +533,7 @@
   <div class="left" style="z-index:2;">
     <div class="chip r d1"><span class="dot"></span>Section 2 — SDLC</div>
     <h2 class="head r d2">Prompting without a system is <em>chaos at scale.</em></h2>
-    <p class="sub r d3">Every session: new idea → start typing. Claude builds all of it. Bugs pile up. No record of what was asked, what was built, or why.</p>
+    <p class="sub r d3">New idea → start typing → Claude builds it → bugs pile up → no record of what was asked or why.</p>
   </div>
   <div class="right" style="z-index:2;">
     <div class="ci r d2">Seasonality logic</div>
@@ -523,7 +550,7 @@
   <div class="blob b1"></div>
   <div style="z-index:2;">
     <blockquote class="bq r d1">"I'd lost the <span class="key">theory</span><br>of my own project."</blockquote>
-    <p class="follow r d2">Searched Reddit + GitHub for SDLC templates with stars. Grabbed files, dumped into one repo, threw Claude at it. A few iterations later: a system. That system became <strong>Claude Code Quickstart</strong>.</p>
+    <p class="follow r d2">Searched Reddit + GitHub for SDLC templates. Grabbed files, dumped into one repo, threw Claude at it. A few iterations later: a system. That became <strong>Claude Code Quickstart</strong>.</p>
   </div>
 </div>
 
@@ -532,7 +559,7 @@
   <div class="left" style="z-index:2;">
     <div class="chip r d1"><span class="dot"></span>Key concept</div>
     <h2 class="head r d2"><em>Cognitive</em><br>Debt</h2>
-    <p class="sub r d3">Build too fast. Auto-approve too long. Let AI build while you watch. You lose the theory. And in this world, that's expensive — you're paying for the credits.</p>
+    <p style="font-size:clamp(14px,1.3vw,17px);color:var(--text-dim);line-height:1.7;" class="r d3">Build too fast. Auto-approve too long. You lose the theory — and in this world, you're paying for the credits.</p>
     <div class="warn r d4">"Velocity without understanding isn't progress. It's a bill you pay later."</div>
   </div>
   <div class="right" style="z-index:2;">
@@ -544,7 +571,7 @@
     <div class="dc cog r d3">
       <span class="dl">Cognitive Debt</span>
       <span class="dw">Lives in your brain</span>
-      <span class="dd">You stop understanding what it's doing, how to change it. The code isn't broken — you just can't see it anymore.</span>
+      <span class="dd">You stop understanding what it does or how to change it. The code isn't broken — you just can't see it anymore.</span>
     </div>
     <p class="attr r d4">— Margaret-Anne Storey, U. of Victoria, Feb 2026</p>
   </div>
@@ -559,14 +586,14 @@
     <div class="rule r d4">"If I can't do the minimum viable version of this process manually, I have no business automating it."</div>
   </div>
   <div class="right" style="z-index:2;">
-    <div class="ts r d2"><span class="tn">01</span><p class="tt"><strong>Define success first.</strong> What does done actually look like?</p></div>
+    <div class="ts r d2"><span class="tn">01</span><p class="tt"><strong>Define success first.</strong> What does done look like?</p></div>
     <div class="ts r d3"><span class="tn">02</span><p class="tt"><strong>Write the test.</strong> What must be true for this to work?</p></div>
-    <div class="ts r d4"><span class="tn">03</span><p class="tt"><strong>Then build</strong> toward the test, not toward whatever you ask next.</p></div>
+    <div class="ts r d4"><span class="tn">03</span><p class="tt"><strong>Build toward the test</strong> — not toward whatever you ask next.</p></div>
     <div class="ts r d5"><span class="tn">✗</span><p class="tt" style="color:var(--mustard);">Meal planner needed: <em>my kids eat dinner without a fight.</em> I built seasonality logic instead.</p></div>
   </div>
 </div>
 
-<!-- 13: SDLC REPO -->
+<!-- 13: SDLC (step cards from purple s8) -->
 <div class="scene" id="s13">
   <div class="grid-bg"></div>
   <div class="top r d1" style="z-index:2;">
@@ -576,20 +603,49 @@
     </div>
     <a href="https://github.com/ssimhan/claude-code-quickstart" class="repo" target="_blank">github.com/ssimhan/claude-code-quickstart</a>
   </div>
-  <table class="wf r d2" style="z-index:2;">
-    <thead><tr><th>Step</th><th>Command</th><th>What it does</th></tr></thead>
-    <tbody>
-      <tr><td class="sn">0</td><td class="sc">/start</td><td class="sd">Orient Claude to your project</td></tr>
-      <tr><td class="sn">1</td><td class="sc">/brainstorm</td><td class="sd">Turn your idea into a clear design</td></tr>
-      <tr><td class="sn">2</td><td class="sc">/plan</td><td class="sd">Break the design into step-by-step tasks</td></tr>
-      <tr><td class="sn">3</td><td class="sc">/build</td><td class="sd">Write code, test-first</td></tr>
-      <tr><td class="sn">4</td><td class="sc">/audit</td><td class="sd">Review quality</td></tr>
-      <tr><td class="sn">5</td><td class="sc">/kaizen</td><td class="sd">Clean up and improve</td></tr>
-      <tr><td class="sn">6</td><td class="sc">/log</td><td class="sd">Track bugs, ideas, debt</td></tr>
-      <tr><td class="sn">7</td><td class="sc">/closeout</td><td class="sd">Save, commit, push</td></tr>
-    </tbody>
-  </table>
-  <div class="hint r d3" style="z-index:2;"><strong>Hint:</strong> A PRD saves you weeks of effort and token quota. Writing it first isn't overhead. It's the work.</div>
+  <div class="steps" style="z-index:2;">
+    <div class="step-card">
+      <div class="step-cmd">/start</div>
+      <div class="step-name">Orient</div>
+      <div class="step-desc">Claude reads your project, history, and state</div>
+    </div>
+    <div class="step-card">
+      <div class="step-cmd">/brainstorm</div>
+      <div class="step-name">Design</div>
+      <div class="step-desc">Turn your idea into a clear design</div>
+    </div>
+    <div class="step-card">
+      <div class="step-cmd">/plan</div>
+      <div class="step-name">Break it down</div>
+      <div class="step-desc">Step-by-step tasks from the design</div>
+    </div>
+    <div class="step-card">
+      <div class="step-cmd">/build</div>
+      <div class="step-name">Build</div>
+      <div class="step-desc">Write code, test-first</div>
+    </div>
+    <div class="step-card">
+      <div class="step-cmd">/audit</div>
+      <div class="step-name">Review</div>
+      <div class="step-desc">Check quality</div>
+    </div>
+    <div class="step-card">
+      <div class="step-cmd">/kaizen</div>
+      <div class="step-name">Improve</div>
+      <div class="step-desc">Clean up and sharpen</div>
+    </div>
+    <div class="step-card">
+      <div class="step-cmd">/log</div>
+      <div class="step-name">Track</div>
+      <div class="step-desc">Bugs, ideas, debt</div>
+    </div>
+    <div class="step-card">
+      <div class="step-cmd">/closeout</div>
+      <div class="step-name">Commit</div>
+      <div class="step-desc">Save progress and push</div>
+    </div>
+  </div>
+  <div class="hint r d3" style="z-index:2;"><strong>A PRD saves weeks of effort and token quota.</strong> Writing it first isn't overhead — it's the work.</div>
 </div>
 
 <!-- 14: TOOL FLOW -->
@@ -631,34 +687,37 @@
         </div>
       </div>
     </div>
-    <p class="foot r d6">I'm not prescribing a stack — I'm giving you a framework to build your own intuition. Most people end up with a 2-tool stack. <em>Prototype in Lovable. Graduate to Claude Code.</em></p>
+    <p class="foot r d6">Most people end up with a 2-tool stack. <em>Prototype in Lovable. Graduate to Claude Code.</em></p>
   </div>
 </div>
 
-<!-- 15: MAKE IT WORK -->
+<!-- 15: MAKE IT WORK (stage dots from purple s10) -->
 <div class="scene" id="s15">
   <div class="blob b1"></div>
   <div style="z-index:2;width:100%;">
     <div class="chip r d1" style="margin-bottom:24px;"><span class="dot"></span>Section 4 — Ship What Matters</div>
-    <h2 class="head r d2" style="margin-bottom:32px;">Make it work.<br>Make it right.<br><span class="y">Make it fast.</span></h2>
-    <div class="three">
-      <div class="sc w r d3">
-        <span class="st">Make it work</span>
-        <p class="sd">Happy path. Success criteria met. MVP.</p>
-        <span class="stag">Most vibe coders stop here</span>
+    <h2 class="head r d2" style="margin-bottom:48px;">Make it work.<br>Make it right.<br><span class="y">Make it fast.</span></h2>
+    <div class="stages">
+      <div class="stage-item">
+        <div class="stage-dot">1</div>
+        <div class="stage-label">Make it work</div>
+        <div class="stage-desc">Happy path. Success criteria met. MVP.</div>
+        <div class="stage-tag">Most vibe coders stop here</div>
       </div>
-      <div class="sc ri r d4">
-        <span class="st">Make it right</span>
-        <p class="sd">Edge cases. Cleaner structure. Something you'd show someone.</p>
-        <span class="stag">The ones who actually use it</span>
+      <div class="stage-item">
+        <div class="stage-dot">2</div>
+        <div class="stage-label">Make it right</div>
+        <div class="stage-desc">Edge cases. Cleaner structure. Something you'd show someone.</div>
+        <div class="stage-tag">The ones who actually use it</div>
       </div>
-      <div class="sc fa r d5">
-        <span class="st">Make it fast</span>
-        <p class="sd">Integrations, scale, optimization.</p>
-        <span class="stag">The ones other people pay for</span>
+      <div class="stage-item">
+        <div class="stage-dot">3</div>
+        <div class="stage-label">Make it fast</div>
+        <div class="stage-desc">Integrations, scale, optimization. Toys become products.</div>
+        <div class="stage-tag">The ones other people pay for</div>
       </div>
     </div>
-    <p class="credit r d6" style="margin-top:20px;">— Kent Beck (also attr. Brian Kernighan, 1983)</p>
+    <p class="callout r d6" style="margin-top:32px;">— Kent Beck (attr. Brian Kernighan, 1983)</p>
   </div>
 </div>
 
@@ -667,8 +726,7 @@
   <div class="blob b1"></div>
   <div class="left" style="z-index:2;">
     <h2 class="head r d1">The allowance tracker<br><span class="y">is QuickBooks.</span></h2>
-    <p class="sub r d2">Same DNA. Different integrations. The delta between a toy app and a billion-dollar product is <em style="color:var(--text)">not</em> the core idea.</p>
-    <p class="punchline r d3">"What's for dinner" is Whisk. The allowance tracker is QuickBooks. Build the core — you already have the idea.</p>
+    <p class="sub r d2">The delta between a toy app and a billion-dollar product is <em style="color:var(--text)">not</em> the core idea. It's integrations and scale.</p>
   </div>
   <div class="right" style="z-index:2;">
     <div class="dr base r d2">Ledger with a balance &nbsp;(your allowance tracker)</div>
@@ -680,28 +738,32 @@
   </div>
 </div>
 
-<!-- 17: STARTERS -->
+<!-- 17: STARTERS (project cards with icons from purple s11) -->
 <div class="scene" id="s17">
   <div style="z-index:2;width:100%;">
     <div class="chip r d1" style="margin-bottom:20px;"><span class="dot"></span>Your first build</div>
     <h2 class="head r d2" style="margin-bottom:28px;">Build one of these. Tonight.</h2>
     <div class="scards">
       <div class="scard r d3">
+        <div class="stime">⏱ ~1 hr</div>
+        <div class="project-icon">🍽️</div>
         <p class="sn">Project 01</p>
-        <h3 class="stitle">Allowance Tracker</h3>
-        <p class="sdesc">Kid earns, spends, saves. Running balance. No APIs, no database.</p>
-        <div class="stags"><span class="tag">No APIs</span><span class="tag">~4 hrs</span><span class="tag">Make it work</span></div>
-        <div class="scrit">"Does my kid know where their money is?"</div>
-      </div>
-      <div class="scard r d4">
-        <p class="sn">Project 02</p>
         <h3 class="stitle">What's For Dinner?</h3>
         <p class="sdesc">15 family meals → get one back based on tonight's constraints. No APIs.</p>
-        <div class="stags"><span class="tag">No APIs</span><span class="tag">~1 hr</span><span class="tag">Make it work</span></div>
+        <div class="stags"><span class="tag">No APIs</span><span class="tag">Make it work</span></div>
         <div class="scrit">"Does my family eat dinner without a fight?"</div>
       </div>
+      <div class="scard r d4">
+        <div class="stime">⏱ ~4 hrs</div>
+        <div class="project-icon">💰</div>
+        <p class="sn">Project 02</p>
+        <h3 class="stitle">Allowance Tracker</h3>
+        <p class="sdesc">Kid earns, spends, saves. Running balance. No APIs, no database.</p>
+        <div class="stags"><span class="tag">No APIs</span><span class="tag">Make it work</span></div>
+        <div class="scrit">"Does my kid know where their money is?"</div>
+      </div>
     </div>
-    <p class="r d5" style="margin-top:24px;font-size:13px;color:var(--text-dim);font-style:italic;">Both can grow. The allowance tracker is QuickBooks. "What's for dinner" is Whisk. Same DNA.</p>
+    <p class="r d5" style="margin-top:20px;font-size:13px;color:var(--text-dim);font-style:italic;">Both can grow. The allowance tracker is QuickBooks. "What's for dinner" is Whisk.</p>
   </div>
 </div>
 
@@ -713,7 +775,6 @@
     <p class="hlbl r d2">hours</p>
     <p class="rt r d3">No significant progress? Either <em>write a better PRD</em> or <em>wait for a better model.</em></p>
     <p class="nuke r d4">"Nuking your repo is not defeat. It's staying in control."</p>
-    <p class="r d5" style="margin-top:20px;font-size:clamp(13px,1.3vw,16px);color:var(--text-dim);">Terrifying and freeing. I've done it many times.</p>
   </div>
 </div>
 
@@ -728,7 +789,7 @@
         <div class="dbody">
           <div class="img-box" style="aspect-ratio:16/9;">
             <span class="il">[SCREEN SHARE]</span>
-            <span class="id">GitHub Actions pipeline — RSS + Whisper transcription → structured output | dark mode GitHub UI</span>
+            <span class="id">GitHub Actions pipeline — RSS + Whisper transcription → structured output</span>
           </div>
           <p class="ddesc">"Make it work, make it right" in production. Runs while I sleep.</p>
         </div>
@@ -738,9 +799,9 @@
         <div class="dbody">
           <div class="img-box" style="aspect-ratio:16/9;">
             <span class="il">[SCREEN SHARE]</span>
-            <span class="id">Meal planner frontend — Solarpunk UI, Waste Not engine | beautiful but overbuilt</span>
+            <span class="id">Meal planner frontend — beautiful but overbuilt</span>
           </div>
-          <p class="ddesc">Beautiful product. Stopped using it. Show frontend → commit history → cognitive debt made visible.</p>
+          <p class="ddesc">Beautiful product. Stopped using it. Cognitive debt made visible.</p>
         </div>
       </div>
     </div>
@@ -761,13 +822,27 @@
   </div>
 </div>
 
-<!-- 21: FINAL QUESTION -->
+<!-- 21: FINAL QUESTION (checklist + particles from purple s12) -->
 <div class="scene" id="s21">
   <div class="blob b1"></div><div class="blob b2"></div>
+  <div id="final-particles" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;"></div>
   <div style="z-index:2;text-align:center;">
-    <p class="preq r d1">The tools are ready.</p>
-    <h2 class="fq r d2">What problem are you going<br><em>to solve first?</em></h2>
-    <div class="credits r d4">
+    <div class="checklist">
+      <div class="check-item">
+        <div class="check-icon">✦</div>
+        <div>You don't need to be an engineer.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-icon">✦</div>
+        <div>Define success before you write a single prompt.</div>
+      </div>
+      <div class="check-item">
+        <div class="check-icon">✦</div>
+        <div>Start with the dumb phone version. Use it first.</div>
+      </div>
+    </div>
+    <h2 class="fq r d4">What problem are you going<br><em>to solve first?</em></h2>
+    <div class="credits r d5">
       <div class="cri"><span class="cl2">SDLC Repo</span>github.com/ssimhan/claude-code-quickstart</div>
       <div class="cri"><span class="cl2">Women Defining AI</span>womendefiningai.com</div>
       <div class="cri"><span class="cl2">Cognitive Debt</span>Storey, U. of Victoria, Feb 2026</div>
@@ -785,7 +860,6 @@
   document.addEventListener('mousemove', e => {
     cursor.style.left = (e.clientX - 4) + 'px';
     cursor.style.top = (e.clientY - 4) + 'px';
-    // Show slide number on mouse move, hide after 2s idle
     document.body.classList.add('mouse-active');
     clearTimeout(mouseTimer);
     mouseTimer = setTimeout(() => document.body.classList.remove('mouse-active'), 2000);
@@ -803,6 +877,7 @@
     scenes[current].classList.add('active');
     document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
     document.getElementById('slide-num').textContent = String(current + 1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
+    if (current === total - 1) spawnParticles();
   }
 
   document.addEventListener('keydown', e => {
@@ -818,6 +893,19 @@
   });
 
   document.addEventListener('click', e => { if (e.target.tagName !== 'A') goTo(current + 1); });
+
+  function spawnParticles() {
+    const container = document.getElementById('final-particles');
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'fp';
+      const size = Math.random() * 4 + 2;
+      p.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${Math.random()*8+6}s;animation-delay:${Math.random()*4}s;background:${Math.random()>0.5?'var(--teal)':'var(--mustard)'};`;
+      container.appendChild(p);
+    }
+  }
 
   goTo(0);
 </script>
