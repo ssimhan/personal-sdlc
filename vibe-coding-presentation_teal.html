@@ -167,6 +167,13 @@
   .ci.bug { border-color:rgba(245,200,66,0.2); background:rgba(245,200,66,0.04); color:var(--mustard); }
   .ci.bug::before { content:'⚠'; color:var(--mustard); }
 
+  /* Step-by-step reveal */
+  .step-item { opacity:0; transform:translateY(12px); transition:opacity 0.45s var(--ease-out),transform 0.45s var(--ease-out); }
+  .step-item.step-visible { opacity:1; transform:none; }
+
+  /* Tool logo icons (slide 12) */
+  .tool-logo { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:5px; font-size:9px; font-weight:800; font-family:'DM Mono',monospace; flex-shrink:0; color:#fff; vertical-align:middle; }
+
   /* ── S9: COGNITIVE DEBT ── */
   #s9 { background:var(--dark3); padding:0 10vw; gap:80px; }
   #s9 .left { flex:1; max-width:480px; display:flex; flex-direction:column; gap:20px; }
@@ -221,18 +228,18 @@
   #s12 .head { font-family:'Playfair Display',serif; font-size:clamp(24px,2.8vw,44px); font-weight:700; line-height:1.2; }
   .ftree { display:flex; flex-direction:column; gap:0; width:100%; }
   .frow { display:flex; align-items:stretch; gap:0; }
-  .fq { padding:14px 20px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09); border-radius:6px; font-size:clamp(13px,1.3vw,15px); flex:2; font-weight:500; display:flex; align-items:center; }
-  .fa { flex:3; display:flex; flex-direction:column; gap:7px; padding-left:20px; justify-content:center; }
-  .fan { display:flex; align-items:center; gap:10px; font-size:clamp(12px,1.1vw,14px); }
-  .fan .arr { color:var(--text-dim); font-size:11px; }
-  .ttag { font-family:'DM Mono',monospace; font-size:11px; padding:3px 9px; border-radius:3px; }
-  .ttag.lo { background:rgba(252,165,165,0.12); color:#FCA5A5; border:1px solid rgba(252,165,165,0.18); }
-  .ttag.re { background:rgba(167,139,250,0.12); color:var(--plum-light); border:1px solid rgba(167,139,250,0.18); }
+  .fq { padding:16px 22px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.09); border-radius:6px; font-size:clamp(14px,1.4vw,17px); flex:2; font-weight:500; display:flex; align-items:center; }
+  .fa { flex:3; display:flex; flex-direction:column; gap:9px; padding-left:24px; justify-content:center; }
+  .fan { display:flex; align-items:center; gap:12px; font-size:clamp(13px,1.2vw,15px); }
+  .fan .arr { color:var(--teal); font-size:12px; font-family:'DM Mono',monospace; font-weight:600; }
+  .ttag { font-family:'DM Mono',monospace; font-size:12px; padding:4px 11px; border-radius:4px; }
+  .ttag.lo { background:rgba(255,61,154,0.15); color:#FF8AC9; border:1px solid rgba(255,61,154,0.3); }
+  .ttag.re { background:rgba(242,98,7,0.15); color:#F5A05A; border:1px solid rgba(242,98,7,0.3); }
   .ttag.cd { background:rgba(255,255,255,0.07); color:var(--text); border:1px solid rgba(255,255,255,0.1); }
-  .ttag.vs { background:rgba(96,165,250,0.12); color:#93C5FD; border:1px solid rgba(96,165,250,0.18); }
-  .ttag.cc { background:rgba(45,212,191,0.1); color:var(--teal); border:1px solid rgba(45,212,191,0.18); }
-  .fconn { width:2px; background:rgba(255,255,255,0.05); margin-left:28px; height:16px; align-self:flex-start; }
-  .fan .note { font-size:11px; color:var(--text-dim); }
+  .ttag.vs { background:rgba(0,120,212,0.15); color:#60A5FA; border:1px solid rgba(0,120,212,0.35); }
+  .ttag.cc { background:rgba(45,212,191,0.1); color:var(--teal); border:1px solid rgba(45,212,191,0.25); }
+  .fconn { width:2px; background:rgba(255,255,255,0.08); margin-left:30px; height:20px; align-self:flex-start; }
+  .fan .note { font-size:12px; color:rgba(240,237,232,0.45); }
   #s12 .foot { font-size:13px; color:var(--text-dim); font-style:italic; border-top:1px solid rgba(255,255,255,0.05); padding-top:16px; }
   #s12 .foot em { color:var(--teal); font-style:normal; }
 
@@ -356,7 +363,7 @@
 <div class="scene" id="s2">
   <div class="blob b1"></div>
   <div style="z-index:2;width:100%;">
-    <div class="chip r d1" style="margin-bottom:28px;"><span class="dot"></span>5 months. No prior code.</div>
+    <div class="chip r d1" style="margin-bottom:28px;"><span class="dot"></span>In just 5 months</div>
     <div class="apps-grid">
       <div class="app-pill r d2"><div class="app-icon">🥗</div><div><div class="app-name">Meal Planner</div><div class="app-desc">Family dinner, no fights</div></div></div>
       <div class="app-pill r d2"><div class="app-icon">📚</div><div><div class="app-name">Read-It-Later</div><div class="app-desc">Replaced Pocket ($8/mo)</div></div></div>
@@ -365,7 +372,6 @@
       <div class="app-pill r d4"><div class="app-icon">🗄️</div><div><div class="app-name">Context Vault</div><div class="app-desc">My second brain</div></div></div>
       <div class="app-pill r d4"><div class="app-icon">🎨</div><div><div class="app-name">In-Product Mockups</div><div class="app-desc">Earned prod repo access</div></div></div>
     </div>
-    <p class="kicker r d5" style="margin-top:28px;">$8–10/mo × 5 SaaS tools → <em>$20/mo Claude subscription → build them all.</em></p>
   </div>
 </div>
 
@@ -373,8 +379,7 @@
 <div class="scene" id="s3">
   <div class="blob" style="width:500px;height:500px;background:radial-gradient(circle,rgba(45,212,191,0.09) 0%,transparent 70%);top:-50px;right:-50px;"></div>
   <div class="left" style="z-index:2;">
-    <div class="chip r d1"><span class="dot"></span>The moment</div>
-    <h2 class="quote r d2">"Don't learn to code.<br>Learn to use <em>Claude Code</em> instead."</h2>
+    <h2 class="quote r d2">You can build anything you want.<br>Learn to use <em>Claude Code</em>.</h2>
     <p class="attr r d3">— Helen Lee Kupp, Founder · Women Defining AI</p>
   </div>
   <div class="right" style="z-index:2;">
@@ -396,9 +401,7 @@
 <div class="scene" id="s4">
   <div class="blob b1"></div>
   <div class="left" style="z-index:2;">
-    <p class="reaction r d1">"That terminal thing?<br><span class="aside">Helen, this seems like a lot."</span></p>
-    <p class="insight r d3"><strong>Build once, use forever.</strong> Not a feature — a different relationship with software.</p>
-    <p class="insight r d4" style="color:var(--text-dim);">$8–10/mo × 5 SaaS → $20/mo Claude → build all of them.</p>
+    <p class="reaction r d1">"This terminal thing seems like a lot."</p>
   </div>
   <div class="right" style="z-index:2;">
     <div class="term r d2">
@@ -488,12 +491,12 @@
     <div class="bq r d4">"I'd lost the <span class="key">theory</span> of my own project."</div>
   </div>
   <div class="right" style="z-index:2;">
-    <div class="ci r d2">Seasonality logic</div>
-    <div class="ci r d3">Fridge inventory tracker</div>
-    <div class="ci r d4">Nightly logging workflow</div>
-    <div class="ci r d5">20 million UI nitpicks</div>
-    <div class="ci bug r d6">Bug inside a bug inside another bug</div>
-    <div class="ci bug r d7">No record of decisions made</div>
+    <div class="ci step-item" id="s8-step-0">Seasonality logic</div>
+    <div class="ci step-item" id="s8-step-1">Fridge inventory tracker</div>
+    <div class="ci step-item" id="s8-step-2">Nightly logging workflow</div>
+    <div class="ci step-item" id="s8-step-3">20 million UI nitpicks</div>
+    <div class="ci bug step-item" id="s8-step-4">Bug inside a bug inside another bug</div>
+    <div class="ci bug step-item" id="s8-step-5">No record of decisions made</div>
   </div>
 </div>
 
@@ -506,24 +509,23 @@
     <div class="warn r d4">"Velocity without understanding isn't progress. It's a bill you pay later."</div>
   </div>
   <div class="right" style="z-index:2;">
-    <div class="dc tech r d2">
+    <div class="dc tech step-item" id="s9-step-0">
       <span class="dl">Technical Debt</span>
       <span class="dw">Lives in the code</span>
       <span class="dd">Messy logic, outdated deps, shortcuts</span>
     </div>
-    <div class="dc cog r d3">
+    <div class="dc cog step-item" id="s9-step-1">
       <span class="dl">Cognitive Debt</span>
       <span class="dw">Lives in your brain</span>
       <span class="dd">You stop understanding what it does or how to change it. The code isn't broken — you just can't see it anymore.</span>
     </div>
-    <p class="attr r d4">— Margaret-Anne Storey, U. of Victoria, Feb 2026</p>
+    <p class="attr step-item" id="s9-step-2">— Margaret-Anne Storey, U. of Victoria, Feb 2026</p>
   </div>
 </div>
 
 <!-- 10: TDD -->
 <div class="scene" id="s10">
   <div class="left" style="z-index:2;">
-    <div class="chip r d1"><span class="dot"></span>The fix</div>
     <h2 class="head r d2">Test-Driven<br>Development</h2>
     <p class="r d3" style="font-size:clamp(13px,1.3vw,16px);color:var(--text-dim);line-height:1.7;">Write the test your software needs to pass <em style="color:var(--text)">before</em> you write the software.</p>
     <div class="rule r d4">"If I can't do the minimum viable version of this process manually, I have no business automating it."</div>
@@ -569,7 +571,7 @@
       <div class="frow r d2">
         <div class="fq">Ever want to see code / use a terminal?</div>
         <div class="fa">
-          <div class="fan"><span class="arr">No →</span><span class="ttag lo">Lovable</span><span class="note">front-end, no code, fastest to shareable</span></div>
+          <div class="fan"><span class="arr">No →</span><span class="tool-logo" style="background:#FF3D9A;">L</span><span class="ttag lo">Lovable</span><span class="note">front-end, no code, fastest to shareable</span></div>
           <div class="fan"><span class="arr">Yes ↓</span></div>
         </div>
       </div>
@@ -577,7 +579,7 @@
       <div class="frow r d3">
         <div class="fq">Want hosting handled for you?</div>
         <div class="fa">
-          <div class="fan"><span class="arr">Yes →</span><span class="ttag re">Replit</span><span class="note">all-in-one cloud, no infra</span></div>
+          <div class="fan"><span class="arr">Yes →</span><span class="tool-logo" style="background:#F26207;">R</span><span class="ttag re">Replit</span><span class="note">all-in-one cloud, no infra</span></div>
           <div class="fan"><span class="arr">No ↓</span></div>
         </div>
       </div>
@@ -585,7 +587,7 @@
       <div class="frow r d4">
         <div class="fq">Comfortable in a terminal?</div>
         <div class="fa">
-          <div class="fan"><span class="arr">No →</span><span class="ttag cd">Claude Desktop</span><span class="note">chat or Cowork, no terminal</span></div>
+          <div class="fan"><span class="arr">No →</span><span class="tool-logo" style="background:#1C1C1E;border:1px solid rgba(45,212,191,0.5);color:var(--teal);">C</span><span class="ttag cd">Claude Desktop</span><span class="note">chat or Cowork, no terminal</span></div>
           <div class="fan"><span class="arr">Yes ↓</span></div>
         </div>
       </div>
@@ -593,8 +595,8 @@
       <div class="frow r d5">
         <div class="fq">Multi-file project with your own SDLC?</div>
         <div class="fa">
-          <div class="fan"><span class="arr">No →</span><span class="ttag vs">VS Code</span><span class="note">IDE + AI assist</span></div>
-          <div class="fan"><span class="arr">Yes →</span><span class="ttag cc">Claude Code</span><span class="note">or</span><span class="ttag cc" style="margin-left:4px;">Antigravity</span></div>
+          <div class="fan"><span class="arr">No →</span><span class="tool-logo" style="background:#0078D4;">VS</span><span class="ttag vs">VS Code</span><span class="note">IDE + AI assist</span></div>
+          <div class="fan"><span class="arr">Yes →</span><span class="tool-logo" style="background:var(--teal);color:var(--dark);">&gt;_</span><span class="ttag cc">Claude Code</span><span class="note">or</span><span class="tool-logo" style="background:var(--plum);margin-left:4px;">AG</span><span class="ttag cc">Antigravity</span></div>
         </div>
       </div>
     </div>
@@ -607,28 +609,24 @@
   <div class="blob b1"></div>
   <div style="z-index:2;width:100%;">
     <div class="chip r d1" style="margin-bottom:24px;"><span class="dot"></span>Section 4 — Ship What Matters</div>
-    <h2 class="head r d2" style="margin-bottom:48px;">Make it work.<br>Make it right.<br><span class="y">Make it fast.</span></h2>
     <div class="stages">
       <div class="stage-item">
         <div class="stage-dot">1</div>
         <div class="stage-label">Make it work</div>
-        <div class="stage-desc">Happy path. Success criteria met. MVP.</div>
-        <div class="stage-tag">Most vibe coders stop here</div>
+        <div class="stage-desc">Most vibe coders stop here</div>
       </div>
       <div class="stage-item">
         <div class="stage-dot">2</div>
         <div class="stage-label">Make it right</div>
-        <div class="stage-desc">Edge cases. Cleaner structure. Something you'd show someone.</div>
-        <div class="stage-tag">The ones who actually use it</div>
+        <div class="stage-desc">The ones who actually use it</div>
       </div>
       <div class="stage-item">
         <div class="stage-dot">3</div>
         <div class="stage-label">Make it fast</div>
-        <div class="stage-desc">Integrations, scale, optimization. Toys become products.</div>
-        <div class="stage-tag">The ones other people pay for</div>
+        <div class="stage-desc">The ones other people pay for</div>
       </div>
     </div>
-    <p class="attr r d6" style="margin-top:28px;">— Kent Beck (attr. Brian Kernighan, 1983)</p>
+    <p class="attr r d6" style="margin-top:28px;">— Kent Beck </p>
   </div>
 </div>
 
@@ -675,7 +673,6 @@
 <!-- 16: DEMO -->
 <div class="scene" id="s16">
   <div style="z-index:2;width:100%;">
-    <div class="chip r d1" style="margin-bottom:20px;"><span class="dot"></span>Live Demo</div>
     <h2 class="r d2" style="font-family:'Playfair Display',serif;font-size:clamp(26px,3vw,46px);font-weight:700;margin-bottom:28px;">Let me show you what this actually looks like.</h2>
     <div class="dcards">
       <div class="dcard r d3">
@@ -733,29 +730,61 @@
   const total = scenes.length;
   let current = 0;
 
-  function goTo(n) {
+  // Per-slide step reveal: map slide index → ordered element IDs
+  const stepConfig = {
+    8: ['#s8-step-0','#s8-step-1','#s8-step-2','#s8-step-3','#s8-step-4','#s8-step-5'],
+    9: ['#s9-step-0','#s9-step-1','#s9-step-2'],
+  };
+  const stepsRevealed = {};
+
+  function goTo(n, forward = true) {
     if (n < 0 || n >= total) return;
     scenes[current].classList.remove('active');
     current = n;
     scenes[current].classList.add('active');
+    const steps = stepConfig[current];
+    if (steps) {
+      if (forward) {
+        steps.forEach(sel => document.querySelector(sel)?.classList.remove('step-visible'));
+        stepsRevealed[current] = 0;
+      } else {
+        steps.forEach(sel => document.querySelector(sel)?.classList.add('step-visible'));
+        stepsRevealed[current] = steps.length;
+      }
+    }
     document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
     document.getElementById('slide-num').textContent = String(current + 1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
     if (current === total - 1) spawnParticles();
   }
 
+  function advance() {
+    const steps = stepConfig[current];
+    if (steps) {
+      const count = stepsRevealed[current] || 0;
+      if (count < steps.length) {
+        document.querySelector(steps[count])?.classList.add('step-visible');
+        stepsRevealed[current] = count + 1;
+        return;
+      }
+    }
+    goTo(current + 1, true);
+  }
+
+  function retreat() { goTo(current - 1, false); }
+
   document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); goTo(current + 1); }
-    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); goTo(current - 1); }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); advance(); }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); retreat(); }
   });
 
   let tx = 0;
   document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
   document.addEventListener('touchend', e => {
     const dx = e.changedTouches[0].clientX - tx;
-    if (Math.abs(dx) > 50) dx < 0 ? goTo(current + 1) : goTo(current - 1);
+    if (Math.abs(dx) > 50) dx < 0 ? advance() : retreat();
   });
 
-  document.addEventListener('click', e => { if (e.target.tagName !== 'A') goTo(current + 1); });
+  document.addEventListener('click', e => { if (e.target.tagName !== 'A') advance(); });
 
   function spawnParticles() {
     const container = document.getElementById('final-particles');
