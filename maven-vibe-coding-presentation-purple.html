@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Native Vibe Coding — Sandhya Simhan</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: rgba(255,255,255,0.08);
+    --accent: #7c6af7;
+    --accent2: #f27d52;
+    --accent3: #4ecdc4;
+    --text: #f0eff8;
+    --muted: rgba(240,239,248,0.45);
+    --glow: rgba(124,106,247,0.25);
+    --transition: 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    --fast: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    background: var(--bg); color: var(--text);
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* ── Grain overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 999;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+    opacity: 0.4;
+  }
+
+  /* ── Stage ── */
+  #stage {
+    width: 100vw; height: 100vh;
+    position: relative; overflow: hidden;
+  }
+
+  /* ── Progress bar ── */
+  #progress-bar {
+    position: fixed; bottom: 0; left: 0; height: 2px; z-index: 100;
+    background: var(--accent);
+    transition: width 500ms cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  /* ── Slide counter ── */
+  #counter {
+    position: fixed; bottom: 18px; right: 28px;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); z-index: 100;
+    font-weight: 500;
+  }
+
+  /* ── Hint ── */
+  #hint {
+    position: fixed; bottom: 18px; left: 28px;
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); z-index: 100;
+    transition: opacity 1s ease;
+  }
+
+  /* ══════════ SCENE BASE ══════════ */
+  .scene {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity var(--transition), transform var(--transition);
+    transform: translateY(40px);
+  }
+  .scene.active {
+    opacity: 1; pointer-events: all;
+    transform: translateY(0);
+  }
+  .scene.exit {
+    opacity: 0; transform: translateY(-40px);
+  }
+
+  /* ══════════ SCENE 1: COLD OPEN ══════════ */
+  #s1 { background: var(--bg); }
+  #s1 .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(124,106,247,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,106,247,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridDrift 20s linear infinite;
+  }
+  @keyframes gridDrift {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+  #s1 .glow-orb {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(124,106,247,0.18) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    animation: pulse 4s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.7; }
+    50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
+  }
+  #s1 .content {
+    position: relative; z-index: 2; text-align: center; max-width: 900px; padding: 0 40px;
+  }
+  #s1 .eyebrow {
+    font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 32px;
+    opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+  }
+  #s1 .headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(56px, 7vw, 96px); line-height: 1.0;
+    color: var(--text); margin-bottom: 28px;
+    opacity: 0; animation: fadeUp 0.8s 0.4s forwards;
+  }
+  #s1 .headline em { color: var(--accent); font-style: italic; }
+  #s1 .sub {
+    font-size: 18px; color: var(--muted); font-weight: 300; line-height: 1.6;
+    opacity: 0; animation: fadeUp 0.8s 0.7s forwards;
+    max-width: 600px; margin: 0 auto 48px;
+  }
+  #s1 .speaker-tag {
+    font-size: 13px; letter-spacing: 0.08em; color: var(--muted);
+    opacity: 0; animation: fadeUp 0.8s 1s forwards;
+  }
+  #s1 .speaker-tag strong { color: var(--text); font-weight: 600; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ══════════ SCENE 2: THE DIVIDE ══════════ */
+  #s2 {
+    background: var(--bg);
+  }
+  #s2 .split {
+    display: grid; grid-template-columns: 1fr 1fr; width: 100%; height: 100%;
+    position: relative;
+  }
+  #s2 .half {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 80px 60px; position: relative;
+    transition: all var(--transition);
+  }
+  #s2 .half.left { border-right: 1px solid var(--border); }
+  #s2 .divider-line {
+    position: absolute; left: 50%; top: 0; bottom: 0; width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--accent), transparent);
+    z-index: 2;
+  }
+  #s2 .label {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 24px; font-weight: 600;
+  }
+  #s2 .big-word {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(72px, 9vw, 120px); line-height: 1;
+    margin-bottom: 20px;
+  }
+  #s2 .left .big-word { color: rgba(240,239,248,0.25); }
+  #s2 .right .big-word { color: var(--accent); }
+  #s2 .desc {
+    font-size: 17px; color: var(--muted); text-align: center; line-height: 1.6;
+    max-width: 320px;
+  }
+  #s2 .reveal-line {
+    position: absolute; bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    font-size: 13px; color: var(--accent2); letter-spacing: 0.1em;
+    padding-bottom: 60px; text-align: center;
+  }
+
+  /* ══════════ SCENE 3: THE SHIFT MOMENT ══════════ */
+  #s3 { background: #08080e; }
+  #s3 .bg-sweep {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 50%, rgba(124,106,247,0.12) 0%, transparent 70%);
+    animation: sweep 6s ease-in-out infinite alternate;
+  }
+  @keyframes sweep {
+    from { transform: scale(1) translateX(-5%); }
+    to { transform: scale(1.1) translateX(5%); }
+  }
+  #s3 .content { position: relative; z-index: 2; text-align: center; max-width: 860px; padding: 0 48px; }
+  #s3 .old-thought {
+    font-size: 22px; color: rgba(240,239,248,0.2);
+    text-decoration: line-through; text-decoration-color: rgba(242,125,82,0.5);
+    margin-bottom: 48px; font-style: italic; font-weight: 300;
+  }
+  #s3 .shift-word {
+    font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--accent2); margin-bottom: 32px; font-weight: 600;
+  }
+  #s3 .new-thought {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(42px, 5.5vw, 72px); line-height: 1.15;
+    color: var(--text); margin-bottom: 36px;
+  }
+  #s3 .new-thought em { color: var(--accent); font-style: italic; }
+  #s3 .attribution {
+    font-size: 14px; color: var(--muted); font-style: italic;
+  }
+
+  /* ══════════ SCENE 4: THE PROOF ══════════ */
+  #s4 { background: var(--bg); }
+  #s4 .content { position: relative; z-index: 2; width: 100%; max-width: 1100px; padding: 0 80px; }
+  #s4 .eyebrow {
+    font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent3); font-weight: 600; margin-bottom: 40px;
+  }
+  #s4 .headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 4vw, 56px); margin-bottom: 56px; line-height: 1.15;
+  }
+  #s4 .apps-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  #s4 .app-pill {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 24px;
+    display: flex; align-items: center; gap: 16px;
+    transition: border-color 0.3s, transform 0.3s;
+    opacity: 0; transform: translateY(20px);
+  }
+  #s4.active .app-pill { animation: popIn 0.5s forwards; }
+  #s4.active .app-pill:nth-child(1) { animation-delay: 0.1s; }
+  #s4.active .app-pill:nth-child(2) { animation-delay: 0.2s; }
+  #s4.active .app-pill:nth-child(3) { animation-delay: 0.3s; }
+  #s4.active .app-pill:nth-child(4) { animation-delay: 0.4s; }
+  #s4.active .app-pill:nth-child(5) { animation-delay: 0.5s; }
+  #s4.active .app-pill:nth-child(6) { animation-delay: 0.6s; }
+  @keyframes popIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  #s4 .app-icon { font-size: 28px; flex-shrink: 0; }
+  #s4 .app-name { font-size: 15px; font-weight: 600; }
+  #s4 .app-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  #s4 .kicker {
+    margin-top: 44px; font-size: 15px; color: var(--muted); line-height: 1.6;
+    border-left: 2px solid var(--accent); padding-left: 20px;
+  }
+  #s4 .kicker strong { color: var(--accent); }
+
+  /* ══════════ SCENE 5: HOME DEPOT METAPHOR ══════════ */
+  #s5 { background: #070709; }
+  #s5 .triptych {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 0;
+    align-items: center; width: 100%; max-width: 1100px; padding: 0 60px;
+  }
+  #s5 .panel {
+    padding: 60px 50px; text-align: center;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 20px;
+  }
+  #s5 .panel.left { border-color: rgba(240,239,248,0.1); }
+  #s5 .panel.right { border-color: var(--accent); box-shadow: 0 0 40px rgba(124,106,247,0.12); }
+  #s5 .vs {
+    padding: 0 40px; text-align: center;
+    font-size: 28px; font-weight: 300; color: var(--muted);
+  }
+  #s5 .panel-icon { font-size: 52px; margin-bottom: 24px; }
+  #s5 .panel-label {
+    font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    font-weight: 600; margin-bottom: 16px;
+  }
+  #s5 .panel.left .panel-label { color: var(--muted); }
+  #s5 .panel.right .panel-label { color: var(--accent); }
+  #s5 .panel-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px; margin-bottom: 16px; line-height: 1.2;
+  }
+  #s5 .panel-desc { font-size: 15px; color: var(--muted); line-height: 1.6; }
+  #s5 .bottom-note {
+    position: absolute; bottom: 80px; left: 50%;
+    transform: translateX(-50%); text-align: center;
+    font-size: 14px; color: var(--muted); font-style: italic;
+    max-width: 600px; line-height: 1.6;
+  }
+  #s5 .bottom-note strong { color: var(--accent2); font-style: normal; }
+
+  /* ══════════ SCENE 6: AI RAISES THE FLOOR ══════════ */
+  #s6 { background: var(--bg); }
+  #s6 .content { text-align: center; max-width: 800px; padding: 0 48px; position: relative; z-index: 2; }
+  #s6 .pre-line { font-size: 16px; color: var(--muted); margin-bottom: 20px; font-style: italic; }
+  #s6 .big-stat {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(60px, 10vw, 140px); line-height: 1;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  #s6 .stat-label { font-size: 20px; color: var(--text); font-weight: 300; margin-bottom: 48px; }
+  #s6 .truth {
+    font-size: clamp(22px, 2.8vw, 34px); font-weight: 300; line-height: 1.4;
+    color: var(--text); max-width: 680px; margin: 0 auto;
+  }
+  #s6 .truth strong { font-weight: 700; color: var(--accent); }
+  #s6 .floor-viz {
+    margin: 48px auto 0;
+    width: 400px; height: 60px; position: relative;
+    border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    background: rgba(255,255,255,0.02);
+  }
+  #s6 .floor-bar {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent3));
+    width: 0%; transition: width 1.5s cubic-bezier(0.4,0,0.2,1) 0.3s;
+    border-radius: 6px;
+  }
+  #s6.active .floor-bar { width: 75%; }
+  #s6 .floor-labels {
+    display: flex; justify-content: space-between;
+    margin-top: 10px; font-size: 12px; color: var(--muted); letter-spacing: 0.08em;
+  }
+
+  /* ══════════ SCENE 7: COGNITIVE DEBT ══════════ */
+  #s7 { background: #08080c; }
+  #s7 .bg-noise {
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent, transparent 2px,
+      rgba(242,125,82,0.015) 2px, rgba(242,125,82,0.015) 4px
+    );
+  }
+  #s7 .content { position: relative; z-index: 2; max-width: 960px; padding: 0 60px; }
+  #s7 .term {
+    font-size: 11px; letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--accent2); font-weight: 600; margin-bottom: 20px;
+  }
+  #s7 .definition {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 4.5vw, 62px); line-height: 1.15;
+    margin-bottom: 44px;
+  }
+  #s7 .definition .highlight { color: var(--accent2); }
+  #s7 .contrast-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    margin-bottom: 40px;
+  }
+  #s7 .c-box {
+    padding: 24px 28px; border-radius: 12px; border: 1px solid var(--border);
+  }
+  #s7 .c-box.danger {
+    background: rgba(242,125,82,0.05); border-color: rgba(242,125,82,0.2);
+  }
+  #s7 .c-box.safe {
+    background: rgba(78,205,196,0.05); border-color: rgba(78,205,196,0.2);
+  }
+  #s7 .c-label {
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    font-weight: 600; margin-bottom: 12px;
+  }
+  #s7 .c-box.danger .c-label { color: var(--accent2); }
+  #s7 .c-box.safe .c-label { color: var(--accent3); }
+  #s7 .c-text { font-size: 15px; color: var(--muted); line-height: 1.6; }
+  #s7 .quote {
+    font-size: 17px; font-style: italic; color: var(--text);
+    border-left: 2px solid var(--accent2); padding-left: 24px; line-height: 1.6;
+  }
+
+  /* ══════════ SCENE 8: SDLC TABLE ══════════ */
+  #s8 { background: var(--bg); }
+  #s8 .content { max-width: 1080px; padding: 0 60px; width: 100%; }
+  #s8 .eyebrow {
+    font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 16px;
+  }
+  #s8 .headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 3.5vw, 48px); margin-bottom: 40px; line-height: 1.2;
+  }
+  #s8 .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+  #s8 .step-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 18px;
+    opacity: 0; transform: translateY(16px);
+    transition: border-color 0.3s;
+  }
+  #s8.active .step-card { animation: popIn 0.4s forwards; }
+  #s8.active .step-card:nth-child(1) { animation-delay: 0.05s; }
+  #s8.active .step-card:nth-child(2) { animation-delay: 0.1s; }
+  #s8.active .step-card:nth-child(3) { animation-delay: 0.15s; }
+  #s8.active .step-card:nth-child(4) { animation-delay: 0.2s; }
+  #s8.active .step-card:nth-child(5) { animation-delay: 0.25s; }
+  #s8.active .step-card:nth-child(6) { animation-delay: 0.3s; }
+  #s8.active .step-card:nth-child(7) { animation-delay: 0.35s; }
+  #s8.active .step-card:nth-child(8) { animation-delay: 0.4s; }
+  #s8 .step-cmd {
+    font-family: 'Courier New', monospace; font-size: 16px; font-weight: 700;
+    color: var(--accent); margin-bottom: 8px;
+  }
+  #s8 .step-name { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  #s8 .step-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  #s8 .repo-cta {
+    background: rgba(124,106,247,0.08); border: 1px solid rgba(124,106,247,0.25);
+    border-radius: 10px; padding: 16px 24px; display: flex; align-items: center;
+    gap: 16px; font-size: 14px;
+  }
+  #s8 .repo-cta a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  #s8 .repo-cta .tag { color: var(--muted); }
+
+  /* ══════════ SCENE 9: TOOL DECISION TREE ══════════ */
+  #s9 { background: #07070d; }
+  #s9 .content { max-width: 860px; padding: 0 60px; width: 100%; }
+  #s9 .eyebrow {
+    font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent3); font-weight: 600; margin-bottom: 16px;
+  }
+  #s9 .headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 3.5vw, 48px); margin-bottom: 40px;
+  }
+  #s9 .tree { display: flex; flex-direction: column; gap: 0; }
+  #s9 .tier {
+    display: flex; align-items: center; gap: 0;
+    opacity: 0; transform: translateX(-20px);
+  }
+  #s9.active .tier { animation: slideIn 0.5s forwards; }
+  #s9.active .tier:nth-child(1) { animation-delay: 0.05s; }
+  #s9.active .tier:nth-child(2) { animation-delay: 0.15s; }
+  #s9.active .tier:nth-child(3) { animation-delay: 0.25s; }
+  #s9.active .tier:nth-child(4) { animation-delay: 0.35s; }
+  #s9.active .tier:nth-child(5) { animation-delay: 0.45s; }
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+  #s9 .question {
+    flex: 1; padding: 16px 20px; font-size: 14px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 8px;
+    background: var(--surface); margin-bottom: 8px;
+  }
+  #s9 .arrow { padding: 0 16px; color: var(--muted); font-size: 18px; }
+  #s9 .tool-badge {
+    padding: 10px 20px; border-radius: 20px; font-size: 14px; font-weight: 700;
+    white-space: nowrap; margin-bottom: 8px;
+  }
+  #s9 .tool-badge.l { background: rgba(78,205,196,0.12); color: var(--accent3); border: 1px solid rgba(78,205,196,0.25); }
+  #s9 .tool-badge.r { background: rgba(242,125,82,0.12); color: var(--accent2); border: 1px solid rgba(242,125,82,0.25); }
+  #s9 .tool-badge.p { background: rgba(124,106,247,0.12); color: var(--accent); border: 1px solid rgba(124,106,247,0.25); }
+  #s9 .tool-badge.cc { background: rgba(124,106,247,0.2); color: var(--text); border: 1px solid var(--accent); }
+  #s9 .tree-tier { display: flex; flex-direction: column; flex: 1; }
+  #s9 .cta-note { margin-top: 24px; font-size: 15px; color: var(--muted); font-style: italic; text-align: center; }
+  #s9 .cta-note strong { color: var(--accent); font-style: normal; }
+
+  /* ══════════ SCENE 10: MAKE IT WORK ══════════ */
+  #s10 { background: var(--bg); }
+  #s10 .content { position: relative; z-index: 2; text-align: center; max-width: 900px; padding: 0 60px; }
+  #s10 .quote-attr {
+    font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 32px; font-weight: 500;
+  }
+  #s10 .stages { display: flex; gap: 0; margin-bottom: 52px; position: relative; }
+  #s10 .stages::before {
+    content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3), var(--accent2));
+    transform: translateY(-50%); z-index: 0;
+  }
+  #s10 .stage-item {
+    flex: 1; text-align: center; position: relative; z-index: 1;
+    opacity: 0; transform: translateY(20px);
+  }
+  #s10.active .stage-item { animation: popIn 0.5s forwards; }
+  #s10.active .stage-item:nth-child(1) { animation-delay: 0.1s; }
+  #s10.active .stage-item:nth-child(2) { animation-delay: 0.3s; }
+  #s10.active .stage-item:nth-child(3) { animation-delay: 0.5s; }
+  #s10 .stage-dot {
+    width: 48px; height: 48px; border-radius: 50%; margin: 0 auto 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 800;
+    position: relative; z-index: 2;
+  }
+  #s10 .stage-item:nth-child(1) .stage-dot { background: var(--accent); color: var(--bg); }
+  #s10 .stage-item:nth-child(2) .stage-dot { background: var(--accent3); color: var(--bg); }
+  #s10 .stage-item:nth-child(3) .stage-dot { background: var(--accent2); color: var(--bg); }
+  #s10 .stage-label {
+    font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 10px;
+  }
+  #s10 .stage-desc { font-size: 13px; color: var(--muted); line-height: 1.5; max-width: 180px; margin: 0 auto; }
+  #s10 .callout {
+    font-size: 17px; color: var(--text); font-style: italic; line-height: 1.6;
+    border-top: 1px solid var(--border); padding-top: 40px;
+    max-width: 700px; margin: 0 auto;
+  }
+
+  /* ══════════ SCENE 11: STARTER PROJECTS ══════════ */
+  #s11 { background: #07070c; }
+  #s11 .content { max-width: 1060px; padding: 0 60px; width: 100%; }
+  #s11 .eyebrow {
+    font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent2); font-weight: 600; margin-bottom: 16px;
+  }
+  #s11 .headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 3.5vw, 52px); margin-bottom: 44px;
+  }
+  #s11 .projects { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  #s11 .project-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 40px 36px;
+    opacity: 0; transform: translateY(24px);
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s;
+  }
+  #s11.active .project-card:nth-child(1) { animation: popIn 0.5s 0.1s forwards; }
+  #s11.active .project-card:nth-child(2) { animation: popIn 0.5s 0.3s forwards; }
+  #s11 .project-card.featured { border-color: rgba(242,125,82,0.3); }
+  #s11 .project-card::before {
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 180px; height: 180px; border-radius: 50%;
+    opacity: 0.06;
+  }
+  #s11 .project-card:nth-child(1)::before { background: var(--accent3); }
+  #s11 .project-card:nth-child(2)::before { background: var(--accent2); }
+  #s11 .project-icon { font-size: 44px; margin-bottom: 20px; }
+  #s11 .project-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px; margin-bottom: 12px;
+  }
+  #s11 .project-desc { font-size: 15px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+  #s11 .project-success {
+    font-size: 13px; color: var(--accent3); background: rgba(78,205,196,0.07);
+    border: 1px solid rgba(78,205,196,0.2); border-radius: 8px; padding: 12px 16px;
+    line-height: 1.5;
+  }
+  #s11 .project-card.featured .project-success {
+    color: var(--accent2); background: rgba(242,125,82,0.07);
+    border-color: rgba(242,125,82,0.2);
+  }
+  #s11 .project-time {
+    position: absolute; top: 28px; right: 28px;
+    font-size: 12px; color: var(--muted); background: var(--bg);
+    border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px;
+  }
+
+  /* ══════════ SCENE 12: THE QUESTION ══════════ */
+  #s12 { background: #06060b; }
+  #s12 .bg-particles {
+    position: absolute; inset: 0; overflow: hidden;
+  }
+  #s12 .particle {
+    position: absolute; border-radius: 50%;
+    background: var(--accent); opacity: 0;
+    animation: float linear infinite;
+  }
+  @keyframes float {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.1; }
+    100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+  }
+  #s12 .content { position: relative; z-index: 2; text-align: center; max-width: 820px; padding: 0 60px; }
+  #s12 .checklist {
+    display: flex; flex-direction: column; gap: 16px; margin-bottom: 56px; text-align: left;
+  }
+  #s12 .check-item {
+    display: flex; align-items: flex-start; gap: 16px; font-size: 18px;
+    color: var(--muted); line-height: 1.5;
+    opacity: 0; transform: translateX(-20px);
+  }
+  #s12.active .check-item { animation: slideIn 0.5s forwards; }
+  #s12.active .check-item:nth-child(1) { animation-delay: 0.1s; }
+  #s12.active .check-item:nth-child(2) { animation-delay: 0.25s; }
+  #s12.active .check-item:nth-child(3) { animation-delay: 0.4s; }
+  #s12 .check-icon { color: var(--accent); font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+  #s12 .big-q {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 5vw, 64px); line-height: 1.15;
+    color: var(--text); margin-bottom: 0;
+  }
+  #s12 .big-q em { color: var(--accent); font-style: italic; }
+
+  /* ══════════ SHARED HELPERS ══════════ */
+  .tag-line {
+    display: inline-block; font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; font-weight: 700; padding: 6px 14px;
+    border-radius: 20px; background: rgba(124,106,247,0.1);
+    border: 1px solid rgba(124,106,247,0.25); color: var(--accent);
+    margin-bottom: 24px;
+  }
+
+  /* Print / export */
+  @media print {
+    .scene { position: relative !important; opacity: 1 !important; transform: none !important; page-break-after: always; height: 100vh; }
+    #progress-bar, #counter, #hint { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stage">
+
+  <!-- ── S1: COLD OPEN ── -->
+  <div class="scene active" id="s1">
+    <div class="bg-grid"></div>
+    <div class="glow-orb"></div>
+    <div class="content">
+      <div class="eyebrow">Maven Session · 30 min · ~150–200 Attendees</div>
+      <h1 class="headline">AI-Native<br><em>Vibe Coding</em></h1>
+      <p class="sub">How a non-technical PMM built six apps, a Chrome extension, and earned access to the production repo — without learning to code.</p>
+      <div class="speaker-tag"><strong>Sandhya Simhan</strong> &nbsp;·&nbsp; PMM, Women Defining AI</div>
+    </div>
+  </div>
+
+  <!-- ── S2: THE DIVIDE ── -->
+  <div class="scene" id="s2">
+    <div class="split">
+      <div class="half left">
+        <div class="label">For years I believed this</div>
+        <div class="big-word">Coder</div>
+        <div class="desc">You were one, or you weren't. A permanent, uncrossable line.</div>
+      </div>
+      <div class="divider-line"></div>
+      <div class="half right">
+        <div class="label">Or you were this</div>
+        <div class="big-word">Not</div>
+        <div class="desc">I made peace with it. I was wrong.</div>
+      </div>
+    </div>
+    <div class="reveal-line">I was wrong.</div>
+  </div>
+
+  <!-- ── S3: THE SHIFT ── -->
+  <div class="scene" id="s3">
+    <div class="bg-sweep"></div>
+    <div class="content">
+      <div class="old-thought">"I should learn to code."</div>
+      <div class="shift-word">The real shift</div>
+      <h2 class="new-thought">Wait —<br>this is actually <em>possible?</em></h2>
+      <p class="attribution">— Sandhya Simhan, the moment Helen Lee Kupp opened her terminal</p>
+    </div>
+  </div>
+
+  <!-- ── S4: THE PROOF ── -->
+  <div class="scene" id="s4">
+    <div class="content">
+      <div class="eyebrow">What I built in 5 months</div>
+      <h2 class="headline">Six apps. One Chrome extension.<br>Zero lines of code written by hand.</h2>
+      <div class="apps-grid">
+        <div class="app-pill">
+          <div class="app-icon">🥗</div>
+          <div><div class="app-name">Meal Planner</div><div class="app-desc">Family dinner, no fights</div></div>
+        </div>
+        <div class="app-pill">
+          <div class="app-icon">📚</div>
+          <div><div class="app-name">Read-It-Later</div><div class="app-desc">Replaced Pocket ($8/mo)</div></div>
+        </div>
+        <div class="app-pill">
+          <div class="app-icon">🗄️</div>
+          <div><div class="app-name">Context Vault</div><div class="app-desc">My second brain</div></div>
+        </div>
+        <div class="app-pill">
+          <div class="app-icon">⚙️</div>
+          <div><div class="app-name">Marketing Engine</div><div class="app-desc">Automated, runs while I sleep</div></div>
+        </div>
+        <div class="app-pill">
+          <div class="app-icon">🧩</div>
+          <div><div class="app-name">Chrome Extension</div><div class="app-desc">Custom browser tooling</div></div>
+        </div>
+        <div class="app-pill">
+          <div class="app-icon">🎨</div>
+          <div><div class="app-name">In-Product Mockups</div><div class="app-desc">Enough to get repo access</div></div>
+        </div>
+      </div>
+      <div class="kicker">$8–10/mo per SaaS → <strong>$20/mo Claude subscription → build them all.</strong> Build once, use forever. That's a different relationship with software.</div>
+    </div>
+  </div>
+
+  <!-- ── S5: HOME DEPOT ── -->
+  <div class="scene" id="s5">
+    <div class="triptych">
+      <div class="panel left">
+        <div class="panel-icon">🖼️</div>
+        <div class="panel-label">No-code tools</div>
+        <h3 class="panel-title">Color by<br>Number</h3>
+        <p class="panel-desc">You can make something that looks like yours — but only inside the lines someone else drew.</p>
+      </div>
+      <div class="vs">vs</div>
+      <div class="panel right">
+        <div class="panel-icon">🏗️</div>
+        <div class="panel-label">Claude Code</div>
+        <h3 class="panel-title">Blank Canvas<br>+ Hardware Store</h3>
+        <p class="panel-desc">Build whatever you want. You can also make expensive mistakes. We'll talk about those.</p>
+      </div>
+    </div>
+    <div class="bottom-note">You can build whatever you want. But <strong>the most important skill isn't coding.</strong><br>It's knowing what you want before you ask for it.</div>
+  </div>
+
+  <!-- ── S6: AI RAISES THE FLOOR ── -->
+  <div class="scene" id="s6">
+    <div class="content">
+      <p class="pre-line">"AI makes you average." — yes, but:</p>
+      <div class="big-stat">0</div>
+      <div class="stat-label">was my coding baseline</div>
+      <p class="truth">Whatever AI produces is already <strong>better than what I could do alone.</strong><br>AI raises the floor — and it's only going up.</p>
+      <div class="floor-viz">
+        <div class="floor-bar"></div>
+      </div>
+      <div class="floor-labels">
+        <span>Sub-average coder (me)</span>
+        <span>AI-assisted output</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S7: COGNITIVE DEBT ── -->
+  <div class="scene" id="s7">
+    <div class="bg-noise"></div>
+    <div class="content">
+      <div class="term">The concept you need to know</div>
+      <h2 class="definition">Technical debt lives in the code.<br><span class="highlight">Cognitive debt lives in your brain.</span></h2>
+      <div class="contrast-row">
+        <div class="c-box danger">
+          <div class="c-label">⚠ Danger zone</div>
+          <div class="c-text">Auto-approve for too long. Let AI build while you just watch. Lose the theory of your own project. Stop understanding what it does or how to change it.</div>
+        </div>
+        <div class="c-box safe">
+          <div class="c-label">✓ The fix</div>
+          <div class="c-text">Build with a system. Define success first. Run the cycle instead of free-prompting. Velocity without understanding is a bill you pay later.</div>
+        </div>
+      </div>
+      <div class="quote">"Velocity without understanding isn't progress. It's a bill you pay later."</div>
+    </div>
+  </div>
+
+  <!-- ── S8: THE SDLC ── -->
+  <div class="scene" id="s8">
+    <div class="content">
+      <div class="eyebrow">Claude Code Quickstart — fork it today</div>
+      <h2 class="headline">Your personal SDLC,<br>encoded as slash commands.</h2>
+      <div class="steps">
+        <div class="step-card">
+          <div class="step-cmd">/start</div>
+          <div class="step-name">Orient</div>
+          <div class="step-desc">Claude reads your project, history, and state</div>
+        </div>
+        <div class="step-card">
+          <div class="step-cmd">/brainstorm</div>
+          <div class="step-name">Design</div>
+          <div class="step-desc">Turn your idea into a clear design</div>
+        </div>
+        <div class="step-card">
+          <div class="step-cmd">/plan</div>
+          <div class="step-name">Break it down</div>
+          <div class="step-desc">Step-by-step task list from the design</div>
+        </div>
+        <div class="step-card">
+          <div class="step-cmd">/build</div>
+          <div class="step-name">Build</div>
+          <div class="step-desc">Write code, test-first</div>
+        </div>
+        <div class="step-card">
+          <div class="step-cmd">/audit</div>
+          <div class="step-name">Review</div>
+          <div class="step-desc">Check what was built for quality</div>
+        </div>
+        <div class="step-card">
+          <div class="step-cmd">/kaizen</div>
+          <div class="step-name">Improve</div>
+          <div class="step-desc">Clean up and improve what exists</div>
+        </div>
+        <div class="step-card">
+          <div class="step-cmd">/log</div>
+          <div class="step-name">Track</div>
+          <div class="step-desc">Bugs, ideas, tech debt</div>
+        </div>
+        <div class="step-card">
+          <div class="step-cmd">/closeout</div>
+          <div class="step-name">Commit</div>
+          <div class="step-desc">Save progress and push</div>
+        </div>
+      </div>
+      <div class="repo-cta">
+        <span>🔗</span>
+        <span><a href="https://github.com/ssimhan/claude-code-quickstart">github.com/ssimhan/claude-code-quickstart</a></span>
+        <span class="tag">· Works with Claude Code, VS Code, Cursor, Claude Desktop</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S9: TOOL DECISION TREE ── -->
+  <div class="scene" id="s9">
+    <div class="content">
+      <div class="eyebrow">Pick the right tool, not just the popular one</div>
+      <h2 class="headline">A decision tree,<br>not a prescription.</h2>
+      <div class="tree">
+        <div class="tier">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;width:100%">
+            <div class="question" style="margin:0">Want to see code or work in a terminal?&nbsp;&nbsp;<strong style="color:var(--text)">No</strong></div>
+            <div class="arrow">→</div>
+            <div class="tool-badge l">Lovable</div>
+          </div>
+        </div>
+        <div class="tier">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;width:100%">
+            <div class="question" style="margin:0">Willing to pay for hosted infra?&nbsp;&nbsp;<strong style="color:var(--text)">Yes</strong></div>
+            <div class="arrow">→</div>
+            <div class="tool-badge r">Replit</div>
+          </div>
+        </div>
+        <div class="tier">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;width:100%">
+            <div class="question" style="margin:0">Comfortable in a terminal?&nbsp;&nbsp;<strong style="color:var(--text)">No</strong></div>
+            <div class="arrow">→</div>
+            <div class="tool-badge l">Claude Desktop</div>
+          </div>
+        </div>
+        <div class="tier">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;width:100%">
+            <div class="question" style="margin:0">Multi-file project + your own SDLC?&nbsp;&nbsp;<strong style="color:var(--text)">No</strong></div>
+            <div class="arrow">→</div>
+            <div class="tool-badge l">VS Code + AI Assist</div>
+          </div>
+        </div>
+        <div class="tier">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;width:100%">
+            <div class="question" style="margin:0">Want maximum control?&nbsp;&nbsp;<strong style="color:var(--text)">Yes</strong></div>
+            <div class="arrow">→</div>
+            <div class="tool-badge cc">Claude Code</div>
+          </div>
+        </div>
+      </div>
+      <p class="cta-note">Most people end up with a <strong>2-tool stack</strong> — prototype in Lovable, graduate to Claude Code for real control.</p>
+    </div>
+  </div>
+
+  <!-- ── S10: MAKE IT WORK ── -->
+  <div class="scene" id="s10">
+    <div class="content">
+      <div class="quote-attr">Kent Beck — still the most useful framework in software</div>
+      <div class="stages">
+        <div class="stage-item">
+          <div class="stage-dot">1</div>
+          <div class="stage-label">Make it work</div>
+          <div class="stage-desc">Happy path. Success criteria met. What most people call an MVP.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-dot">2</div>
+          <div class="stage-label">Make it right</div>
+          <div class="stage-desc">Edge cases, cleaner structure. Something you'd show someone else.</div>
+        </div>
+        <div class="stage-item">
+          <div class="stage-dot">3</div>
+          <div class="stage-label">Make it fast</div>
+          <div class="stage-desc">Integrations, scale, optimization. This is how toys become products.</div>
+        </div>
+      </div>
+      <p class="callout">The allowance tracker your kid uses is QuickBooks with no integrations.<br>The delta between a toy app and a billion-dollar product is <em>integrations and scale</em>, not the core idea.</p>
+    </div>
+  </div>
+
+  <!-- ── S11: STARTER PROJECTS ── -->
+  <div class="scene" id="s11">
+    <div class="content">
+      <div class="eyebrow">Build one of these today</div>
+      <h2 class="headline">If you build nothing else<br>from this session — build one of these.</h2>
+      <div class="projects">
+        <div class="project-card">
+          <div class="project-time">⏱ 1 hour</div>
+          <div class="project-icon">🍽️</div>
+          <div class="project-name">What's for Dinner</div>
+          <p class="project-desc">Enter 15 meals your family likes. Get one back based on time, what's in the fridge, who's cooking. No APIs. Ships in an hour.</p>
+          <div class="project-success">✓ Success criteria: My family doesn't have to argue about dinner tonight.</div>
+        </div>
+        <div class="project-card featured">
+          <div class="project-time">⏱ 1 hour</div>
+          <div class="project-icon">💰</div>
+          <div class="project-name">Allowance Tracker</div>
+          <p class="project-desc">Kid earns and spends, running balance, savings goal. No APIs, no database setup. The same DNA as QuickBooks — just without the integrations yet.</p>
+          <div class="project-success">✓ Success criteria: Does my kid know where their money is?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── S12: CLOSING ── -->
+  <div class="scene" id="s12">
+    <div class="bg-particles" id="particles"></div>
+    <div class="content">
+      <div class="checklist">
+        <div class="check-item">
+          <div class="check-icon">✦</div>
+          <div>You don't need to be an engineer.</div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon">✦</div>
+          <div>You need to be clear about what you want to build — and define success before you write a single prompt.</div>
+        </div>
+        <div class="check-item">
+          <div class="check-icon">✦</div>
+          <div>Start with the dumb phone version. Use it. Then decide if you want to make it smart.</div>
+        </div>
+      </div>
+      <h2 class="big-q">The tools are ready.<br>What problem are you going to<br><em>solve first?</em></h2>
+    </div>
+  </div>
+
+</div><!-- /stage -->
+
+<div id="progress-bar"></div>
+<div id="counter"></div>
+<div id="hint">← → to navigate</div>
+
+<script>
+  const scenes = Array.from(document.querySelectorAll('.scene'));
+  let current = 0;
+
+  function goTo(n) {
+    if (n < 0 || n >= scenes.length) return;
+    scenes[current].classList.remove('active');
+    scenes[current].classList.add('exit');
+    setTimeout(() => scenes[current - (n > current ? 0 : 0)].classList.remove('exit'), 700);
+    const prev = current;
+    current = n;
+    scenes[current].classList.add('active');
+    setTimeout(() => scenes[prev].classList.remove('exit'), 700);
+    updateUI();
+  }
+
+  function updateUI() {
+    const pct = ((current) / (scenes.length - 1)) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + scenes.length;
+    const hint = document.getElementById('hint');
+    hint.style.opacity = current === 0 ? '1' : '0.4';
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); goTo(current + 1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); goTo(current - 1); }
+    if (e.key === 'Home') goTo(0);
+    if (e.key === 'End') goTo(scenes.length - 1);
+  });
+
+  // Touch / swipe
+  let touchStartX = 0, touchStartY = 0;
+  document.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  });
+  document.addEventListener('touchend', e => {
+    const dx = touchStartX - e.changedTouches[0].clientX;
+    const dy = touchStartY - e.changedTouches[0].clientY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+      dx > 0 ? goTo(current + 1) : goTo(current - 1);
+    } else if (Math.abs(dy) > 40) {
+      dy > 0 ? goTo(current + 1) : goTo(current - 1);
+    }
+  });
+
+  // Particles on final slide
+  function spawnParticles() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 0; i < 28; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const size = Math.random() * 4 + 2;
+      p.style.cssText = `
+        width: ${size}px; height: ${size}px;
+        left: ${Math.random() * 100}%;
+        animation-duration: ${Math.random() * 8 + 6}s;
+        animation-delay: ${Math.random() * 4}s;
+        background: ${Math.random() > 0.5 ? 'var(--accent)' : 'var(--accent3)'};
+      `;
+      container.appendChild(p);
+    }
+  }
+  spawnParticles();
+
+  updateUI();
+</script>
+</body>
+</html>
