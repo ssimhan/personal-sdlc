@@ -6,7 +6,7 @@ description: Use when debugging complex agentic workflows, long-running processe
 # Observability & Agentic Traceability
 
 ## Overview
-As agentic workflows grow in complexity, "black box" execution becomes a significant risk. This skill ensures every step an agent takes—from tool calls to internal logic—is traceble, logged, and verifiable.
+As agentic workflows grow in complexity, "black box" execution becomes a significant risk. This skill ensures every step an agent takes, whether it is from tool calls to internal logic, is traceable, logged, and verifiable.
 
 ## The Traceability Standard
 

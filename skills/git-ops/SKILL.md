@@ -5,7 +5,7 @@ description: Comprehensive git workflow including worktree isolation, branching,
 
 # Unified Git Operations
 
-## Phase 1: Isolation (Worktrees)
+## Phase 1: Isolation (Worktrees) 
 Use this when starting new features or executing implementation plans.
 
 1. **Directory Selection**:
